@@ -1,0 +1,49 @@
+public class Key {
+	
+	// key default attribute
+	int keyCode;
+	int keyWidth;
+	int keyHeight;
+	String keyLabel; // label on the key
+	String keyIcon; // image icon on the key
+	int keyEdgeFlags; // left or right
+
+	// detail attribute
+	boolean isRepeatable;
+	boolean isModified;
+	boolean isSticky;
+
+	/**
+	 * Constructor
+	 * @param keyCode
+	 * @param keyWidth
+	 * @param keyHeight
+	 * @param keyLabel
+	 * @param keyIcon
+	 * @param keyEdgeFlags
+	 */
+	public Key(int keyCode, int keyWidth, int keyHeight, String keyLabel,
+			String keyIcon, int keyEdgeFlags) {
+		this.keyCode = keyCode;
+		this.keyWidth = keyWidth;
+		this.keyHeight = keyHeight;
+		this.keyLabel = keyLabel;
+		this.keyIcon = keyIcon;
+		this.keyEdgeFlags = keyEdgeFlags;
+	}
+
+	/**
+	 * detail option Constructor 
+	 * @param isRepeatable
+	 * @param isModified
+	 * @param isSticky
+	 */
+	public Key(int keyCode, int keyWidth, int keyHeight, String keyLabel,
+			String keyIcon, int keyEdgeFlags, boolean isRepeatable,
+			boolean isModified, boolean isSticky) {
+		this(keyCode, keyWidth, keyHeight, keyLabel, keyIcon, keyEdgeFlags);
+		this.isRepeatable = isRepeatable;
+		this.isModified = isModified;
+		this.isSticky = isSticky;
+	}
+}

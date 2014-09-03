@@ -1,3 +1,4 @@
+package template;
 public class Key {
 	
 	// key default attribute

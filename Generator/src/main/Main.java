@@ -1,3 +1,6 @@
+package main;
+import generator.tablereader.TableReader;
+
 public class Main {
 	public static void main(String[] args) {
 		String tablePath = "table"; // table file name is 'table'

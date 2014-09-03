@@ -1,5 +1,12 @@
 package template;
+
 public class Key {
+
+	/**
+	 * issue,
+	 * first, keyCode must be array type.
+	 * second, detail option will be changed.
+	 */
 	
 	// key default attribute
 	int[] keyCode = null;
@@ -13,9 +20,10 @@ public class Key {
 	boolean isRepeatable = false;
 	boolean isModified = false;
 	boolean isSticky = false;
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param keyCode
 	 * @param keyWidth
 	 * @param keyHeight
@@ -34,7 +42,8 @@ public class Key {
 	}
 
 	/**
-	 * detail option Constructor 
+	 * detail option Constructor
+	 * 
 	 * @param isRepeatable
 	 * @param isModified
 	 * @param isSticky

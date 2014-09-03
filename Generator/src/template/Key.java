@@ -2,12 +2,6 @@ package template;
 
 public class Key {
 
-	/**
-	 * issue,
-	 * first, keyCode must be array type.
-	 * second, detail option will be changed.
-	 */
-	
 	// key default attribute
 	int[] keyCode = null;
 	int keyWidth = 0;
@@ -17,13 +11,10 @@ public class Key {
 	int keyEdgeFlags = 0; // left or right
 
 	// detail attribute
-	boolean isRepeatable = false;
-	boolean isModified = false;
-	boolean isSticky = false;
+	int isRepeatable = 0;
 
 	/**
 	 * Constructor
-	 * 
 	 * @param keyCode
 	 * @param keyWidth
 	 * @param keyHeight
@@ -43,17 +34,18 @@ public class Key {
 
 	/**
 	 * detail option Constructor
-	 * 
 	 * @param isRepeatable
 	 * @param isModified
 	 * @param isSticky
 	 */
 	public Key(int[] keyCode, int keyWidth, int keyHeight, String keyLabel,
-			String keyIcon, int keyEdgeFlags, boolean isRepeatable,
-			boolean isModified, boolean isSticky) {
-		this(keyCode, keyWidth, keyHeight, keyLabel, keyIcon, keyEdgeFlags);
+			String keyIcon, int keyEdgeFlags, int isRepeatable) {
+		this.keyCode = keyCode;
+		this.keyWidth = keyWidth;
+		this.keyHeight = keyHeight;
+		this.keyLabel = keyLabel;
+		this.keyIcon = keyIcon;
+		this.keyEdgeFlags = keyEdgeFlags;
 		this.isRepeatable = isRepeatable;
-		this.isModified = isModified;
-		this.isSticky = isSticky;
 	}
 }

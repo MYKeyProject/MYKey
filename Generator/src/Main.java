@@ -1,5 +1,10 @@
 public class Main {
 	public static void main(String[] args) {
-		new Main();
+		String tablePath = "table"; // table file name is 'table'
+		String xmlPath = "."; // XML file path start with '.'
+		String javaPath = "."; // Java file path start with '.'
+		
+		// call TableReader Constructor
+		new TableReader(tablePath, xmlPath, javaPath);
 	}
 }

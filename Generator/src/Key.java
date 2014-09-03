@@ -1,18 +1,18 @@
 public class Key {
 	
 	// key default attribute
-	int keyCode;
-	int keyWidth;
-	int keyHeight;
-	String keyLabel; // label on the key
-	String keyIcon; // image icon on the key
-	int keyEdgeFlags; // left or right
+	int[] keyCode = null;
+	int keyWidth = 0;
+	int keyHeight = 0;
+	String keyLabel = null; // label on the key
+	String keyIcon = null; // image icon on the key
+	int keyEdgeFlags = 0; // left or right
 
 	// detail attribute
-	boolean isRepeatable;
-	boolean isModified;
-	boolean isSticky;
-
+	boolean isRepeatable = false;
+	boolean isModified = false;
+	boolean isSticky = false;
+	
 	/**
 	 * Constructor
 	 * @param keyCode
@@ -22,7 +22,7 @@ public class Key {
 	 * @param keyIcon
 	 * @param keyEdgeFlags
 	 */
-	public Key(int keyCode, int keyWidth, int keyHeight, String keyLabel,
+	public Key(int[] keyCode, int keyWidth, int keyHeight, String keyLabel,
 			String keyIcon, int keyEdgeFlags) {
 		this.keyCode = keyCode;
 		this.keyWidth = keyWidth;
@@ -38,7 +38,7 @@ public class Key {
 	 * @param isModified
 	 * @param isSticky
 	 */
-	public Key(int keyCode, int keyWidth, int keyHeight, String keyLabel,
+	public Key(int[] keyCode, int keyWidth, int keyHeight, String keyLabel,
 			String keyIcon, int keyEdgeFlags, boolean isRepeatable,
 			boolean isModified, boolean isSticky) {
 		this(keyCode, keyWidth, keyHeight, keyLabel, keyIcon, keyEdgeFlags);

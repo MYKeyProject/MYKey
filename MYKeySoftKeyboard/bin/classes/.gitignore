@@ -1,2 +1,6 @@
 /com/
 /.gitignore
+/ime_preferences/
+/key_process/
+/korean_automata/
+/string_key/

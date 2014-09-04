@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!-- This source have to use when you test MYKeySoftKeyboard only -->
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android" android:horizontalGap="0%p" android:verticalGap="0%p">
+	<Row android:keyHeight="10.0%p">
+		<Key android:codes="3007" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㄲ" android:keyEdgeFlags="left" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3008" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㄸ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3009" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㄹㅁ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3506" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅑ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3507" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅕ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3508" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅣ" android:keyEdgeFlags="right" android:horizontalGap="0.0%p"  />
+	</Row>
+	<Row android:keyHeight="10.0%p">
+		<Key android:codes="3010" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅃ" android:keyEdgeFlags="left" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3011" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅆ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="4402" android:keyWidth="33.33%p" android:keyHeight="10.0%p" android:keyLabel="★" android:horizontalGap="0.0%p"  />
+		<Key android:codes="4403" android:keyWidth="33.33%p" android:keyHeight="10.0%p" android:keyLabel="♥" android:keyEdgeFlags="right" android:horizontalGap="0.0%p"  />
+	</Row>
+	<Row android:keyHeight="10.0%p">
+		<Key android:codes="-1" android:keyWidth="16.67%p" android:keyHeight="20.0%p" android:keyLabel="Shift" android:keyEdgeFlags="left" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3012" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅇㅎ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3013" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅉ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3509" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅛ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3510" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅠ" android:horizontalGap="0.0%p"  />
+		<Key android:codes="3511" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ㅡ" android:keyEdgeFlags="right" android:horizontalGap="0.0%p"  />
+	</Row>
+	<Row android:keyHeight="10.0%p">
+		<Key android:codes="-7" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyLabel="ENG" android:keyEdgeFlags="left" android:horizontalGap="16.67%p"  />
+		<Key android:codes="32" android:keyWidth="33.33%p" android:keyHeight="10.0%p" android:keyIcon="@drawable/key174" android:horizontalGap="0.0%p" android:isRepeatable="true"  />
+		<Key android:codes="-5" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyIcon="@drawable/key175" android:horizontalGap="0.0%p" android:isRepeatable="true"  />
+		<Key android:codes="10" android:keyWidth="16.67%p" android:keyHeight="10.0%p" android:keyIcon="@drawable/key176" android:keyEdgeFlags="right" android:horizontalGap="0.0%p"  />
+	</Row>
+</Keyboard>

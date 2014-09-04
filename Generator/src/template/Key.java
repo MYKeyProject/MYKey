@@ -1,20 +1,24 @@
 package template;
 
+/**
+ * This class is Key Framework for use to ease
+ * @author Kim TaeWan
+ */
 public class Key {
 
-	// key default attribute
+	// key default attribute.
 	int[] keyCode = null;
 	int keyWidth = 0;
 	int keyHeight = 0;
-	String keyLabel = null; // label on the key
-	String keyIcon = null; // image icon on the key
-	int keyEdgeFlags = 0; // left or right
+	String keyLabel = null; // label on the key.
+	String keyIcon = null; // image icon on the key.
+	int keyEdgeFlags = 0; // left or right.
 
-	// detail attribute
+	// detail attribute.
 	int isRepeatable = 0;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param keyCode
 	 * @param keyWidth
 	 * @param keyHeight
@@ -33,7 +37,7 @@ public class Key {
 	}
 
 	/**
-	 * detail option Constructor
+	 * detail option Constructor.
 	 * @param isRepeatable
 	 * @param isModified
 	 * @param isSticky

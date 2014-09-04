@@ -8,7 +8,7 @@ public class JAVAGenerator {
 	BufferedWriter javaFileWriter;
 	
 	/**
-	 * JAVAGenerator Constructor
+	 * JAVAGenerator Constructor.
 	 */
 	public JAVAGenerator() {
 		try {

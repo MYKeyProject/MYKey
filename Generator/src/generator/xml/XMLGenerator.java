@@ -8,7 +8,7 @@ public class XMLGenerator {
 	FileOutputStream XMLFile;
 	
 	/**
-	 * XMLGenerator Constructor
+	 * XMLGenerator Constructor.
 	 */
 	public XMLGenerator() {
 		try {

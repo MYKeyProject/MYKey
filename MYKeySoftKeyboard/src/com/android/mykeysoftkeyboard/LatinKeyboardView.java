@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.softkeyboard;
+package com.android.mykeysoftkeyboard;
 
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
@@ -24,30 +24,79 @@ import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodSubtype;
 
 public class LatinKeyboardView extends KeyboardView {
-
     static final int KEYCODE_OPTIONS = -100;
+    private boolean shifted;
+    private boolean toggled;
 
+    
     public LatinKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        shifted = false;
+        toggled = false;
     }
 
+    
     public LatinKeyboardView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        shifted = false;
+        toggled = false;
     }
-
-    @Override
-    protected boolean onLongPress(Key key) {
-        if (key.codes[0] == Keyboard.KEYCODE_CANCEL) {
-            getOnKeyboardActionListener().onKey(KEYCODE_OPTIONS, null);
-            return true;
-        } else {
-            return super.onLongPress(key);
-        }
-    }
-
+    
+    
     void setSubtypeOnSpaceKey(final InputMethodSubtype subtype) {
         final LatinKeyboard keyboard = (LatinKeyboard)getKeyboard();
         keyboard.setSpaceIcon(getResources().getDrawable(subtype.getIconResId()));
         invalidateAllKeys();
+    }
+    
+    
+    @Override
+   	public boolean setShifted(boolean inputShift) {
+       	if(!shifted){
+       		shifted = true;
+       		super.setShifted(true);
+       		
+       	}
+       	else if(!toggled){
+       		toggled = true;
+       	}
+       	else if(toggled){
+       		shifted = false;
+       		toggled = false;
+       		super.setShifted(false);
+       		invalidateAllKeys();
+       		return false;
+       	}
+       	
+       	invalidateAllKeys();
+       	return true;
+   	}
+    
+    
+	public void initShiftState() {
+		shifted = false;
+		toggled = false;
+		super.setShifted(false);
+
+		invalidateAllKeys();
+	}
+
+	
+	public void initShifted() {
+		if (shifted && !toggled) {
+			super.setShifted(false);
+			shifted = false;
+		}
+		invalidateAllKeys();
+	}
+    
+	
+    public boolean getShifted(){
+    	return shifted;
+    }
+    
+    
+    public boolean getToggled(){
+    	return toggled;
     }
 }

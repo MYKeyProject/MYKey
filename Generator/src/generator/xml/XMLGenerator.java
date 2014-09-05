@@ -11,6 +11,7 @@ import template.Key;
 public class XMLGenerator {
 	BufferedWriter XMLFileWriter;
 	FileOutputStream XMLFile;
+	// I need another XML File
 
 	int numOfKey = 0;
 	int numOfRow = 0;
@@ -20,6 +21,9 @@ public class XMLGenerator {
 	double horizontalRate = 100.0;
 
 	ArrayList<Key> keyArray[];
+
+	String totalVerticalGap = "0%p";
+	String totalHorizontalGap = "0%p";
 
 	/**
 	 * XMLGenerator Constructor.
@@ -60,7 +64,7 @@ public class XMLGenerator {
 		int keyWidth = 0;
 		int keyHeight = 0;
 
-		String keyLabel = null; 
+		String keyLabel = null;
 		String keyIcon = null;
 		int keyEdgeFlags = 0;
 		int isRepeatable = 0;
@@ -90,11 +94,11 @@ public class XMLGenerator {
 				// instantiation
 				Key keyInfo = new Key(keyCode, keyWidth, keyHeight, keyLabel,
 						keyIcon, keyEdgeFlags, isRepeatable);
-				
-				keyArray[rowCount-1].add(keyInfo);
+
+				keyArray[rowCount - 1].add(keyInfo);
 			}
 			makeXML();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,5 +110,29 @@ public class XMLGenerator {
 
 	public void makeXML() {
 		// XML File Creator
+		
+		try {
+		XMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		XMLFileWriter.newLine();
+		XMLFileWriter
+				.append("<Keyboard xmlns:android=\"http://schemas.android.com/apk/res/android\"");
+		XMLFileWriter.append(" android:horizontalGap=\"" + totalHorizontalGap
+				+ "\"");
+		XMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
+				+ "\">");
+		XMLFileWriter.newLine();
+
+		writeKeyLayoutInfo(); // write detail information of each key
+
+		XMLFileWriter.append("</Keyboard>");
+		XMLFileWriter.newLine();
+
+		XMLFileWriter.flush();
+		
+		XMLFile.close();
+		XMLFileWriter.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -52,4 +52,35 @@ public class Key {
 		this.keyEdgeFlags = keyEdgeFlags;
 		this.isRepeatable = isRepeatable;
 	}
+	
+	/*
+	 *  getter method of class attribute
+	 */
+	public int[] getKeyCode() {
+		return keyCode;
+	}
+
+	public int getKeyWidth() {
+		return keyWidth;
+	}
+
+	public int getKeyHeight() {
+		return keyHeight;
+	}
+
+	public String getKeyLabel() {
+		return keyLabel;
+	}
+
+	public String getKeyIcon() {
+		return keyIcon;
+	}
+
+	public int getKeyEdgeFlags() {
+		return keyEdgeFlags;
+	}
+
+	public int getIsRepeatable() {
+		return isRepeatable;
+	}
 }

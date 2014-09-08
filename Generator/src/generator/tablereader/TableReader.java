@@ -1,5 +1,8 @@
 package generator.tablereader;
 
+import generator.java.JAVAGenerator;
+import generator.xml.XMLGenerator;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -57,6 +60,9 @@ public class TableReader {
 
 		int numOfXML = 0; // Number of XML File.
 		int numOfRow = 0; // Number of key line.
+		
+		int prevYPos = -1;
+		int currentYPos = 0;
 
 		// read table
 		try {
@@ -72,10 +78,6 @@ public class TableReader {
 					isLayoutInfo = false;
 					isPhonemeInfo = false;
 				}
-
-				/*
-				 * #issue if or else if ?
-				 */
 
 				// MaxColumn Check. It is use to calculate height of key.
 				if (readLine.equals("MaxCol")) {
@@ -117,6 +119,15 @@ public class TableReader {
 				if (isLayoutInfo) {
 					numOfKey++; // The number of key counting.
 					
+					String[] tmpStr = readLine.split("\t");
+					currentYPos = Integer.parseInt(tmpStr[4]);
+					
+					// new row condition.
+					if(currentYPos != prevYPos) {
+						numOfRow++;
+						prevYPos = currentYPos;
+					}
+					
 					if (numOfXML == 1) { // first layout information
 						firstLayoutInfo = firstLayoutInfo.concat(readLine
 								+ "\t" + numOfRow + "\n");
@@ -133,12 +144,10 @@ public class TableReader {
 				if(isStringKeyInfo) {
 					stringKeyInfo = stringKeyInfo.concat(readLine+"\n");
 				}
-				/*
-				 * First, Java Generator
-				 * Second, XML Generator 
-				 * issue, i need some function for XML Generation
-				 * whether it is target point?
-				 */
+				
+				new XMLGenerator(numOfKey, numOfRow, maxRow, maxCol, verticalRate,
+						xmlPath).readKeyArray(firstLayoutInfo, secondLayoutInfo);
+				new JAVAGenerator(javaPath).readPhonemeTable(keyInfo, stringKeyInfo);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -53,7 +53,7 @@ public class XMLGenerator {
 		}
 	}
 
-	public void readKeyArray(String layoutInfo) {
+	public void readKeyArray(String firstLayoutInfo, String secondLayoutInfo) {
 		String[] readLine = null;
 		String[] tmpStr = null;
 		String[] tmpKeyCode = null;
@@ -70,7 +70,7 @@ public class XMLGenerator {
 		int isRepeatable = 0;
 
 		try {
-			readLine = layoutInfo.split("\n");
+			readLine = firstLayoutInfo.split("\n");
 
 			for (int idx = 0; idx < readLine.length; idx++) {
 				tmpStr = readLine[idx].split("\t");

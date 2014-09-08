@@ -17,6 +17,7 @@ public class TableReader {
 
 	/**
 	 * Table Reader Constructor Set and Initialize variable.
+	 * 
 	 * @param tablePath
 	 * @param xmlPath
 	 * @param javaPath
@@ -32,7 +33,6 @@ public class TableReader {
 			this.javaPath = javaPath;
 			tableReader = new BufferedReader(new InputStreamReader(tableFile,
 					"UTF-8"));
-
 			/*
 			 * need function for readTable readTable();
 			 */
@@ -47,7 +47,8 @@ public class TableReader {
 	 */
 	public void readTable() {
 		String readLine = "";
-		String layoutInfo = ""; // Keyboard layout information.
+		String firstLayoutInfo = ""; // Keyboard layout information.
+		String secondLayoutInfo = "";
 		String stringKeyInfo = ""; // String key information.
 		String keyInfo = ""; // information of each key.
 		boolean isStringKeyInfo = false; // String key flag variable.
@@ -75,26 +76,26 @@ public class TableReader {
 				/*
 				 * #issue if or else if ?
 				 */
-				
+
 				// MaxColumn Check. It is use to calculate height of key.
 				if (readLine.equals("MaxCol")) {
 					readLine = tableReader.readLine();
 					maxCol = Integer.parseInt(readLine);
 				}
-				
+
 				// VerticalRate Check. Height of Keyboard.
 				if (readLine.equals("VerticalRate")) {
 					readLine = tableReader.readLine();
 					verticalRate = Double.parseDouble(readLine);
 				}
-				
+
 				// Start of Layout Information.
 				if (readLine.equals("LayoutTable")) {
 					isLayoutInfo = true;
 					readLine = "";
 					continue;
 				}
-				
+
 				// Start of Phoneme Information.
 				if (readLine.equals("PhonemeTable")) {
 					isLayoutInfo = false;
@@ -102,7 +103,7 @@ public class TableReader {
 					readLine = "";
 					continue;
 				}
-				
+
 				// Start of String Key Information.
 				if (readLine.equals("StringKey")) {
 					isStringKeyInfo = true;
@@ -111,12 +112,32 @@ public class TableReader {
 					readLine = "";
 					continue;
 				}
+
+				// Layout information write
+				if (isLayoutInfo) {
+					numOfKey++; // The number of key counting.
+					
+					if (numOfXML == 1) { // first layout information
+						firstLayoutInfo = firstLayoutInfo.concat(readLine
+								+ "\t" + numOfRow + "\n");
+					} else if (numOfXML == 2) { // another (second)
+						secondLayoutInfo = secondLayoutInfo
+								.concat(readLine = "\t" + numOfRow + "\n");
+					}
+				}
 				
+				if(isPhonemeInfo) {
+					keyInfo = keyInfo.concat(readLine + "\n");
+				}
+				
+				if(isStringKeyInfo) {
+					stringKeyInfo = stringKeyInfo.concat(readLine+"\n");
+				}
 				/*
-				 * 1 : Layout Information Write.
-				 * 2 : Phoneme Information Write.
-				 * 3 : String Key Information Write.
-				 * Plus, Constructor for XML and JAVA Generator
+				 * First, Java Generator
+				 * Second, XML Generator 
+				 * issue, i need some function for XML Generation
+				 * whether it is target point?
 				 */
 			}
 		} catch (Exception e) {

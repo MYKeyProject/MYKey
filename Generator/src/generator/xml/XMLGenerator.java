@@ -9,9 +9,18 @@ import java.util.ArrayList;
 import template.Key;
 
 public class XMLGenerator {
-	BufferedWriter XMLFileWriter;
-	FileOutputStream XMLFile;
-	// I need another XML File
+	/*
+	 * constant variable for flag?
+	 */
+	final int FALSE = 0;
+	final int TRUE = 1;
+	final int RIGHT = 3;
+	final int LEFT = 2;
+	
+	BufferedWriter shiftXMLFileWriter;
+	FileOutputStream shiftXMLFile;
+	BufferedWriter notShiftXMLFileWriter;
+	FileOutputStream notShiftXMLFile;
 
 	int numOfKey = 0;
 	int numOfRow = 0;
@@ -20,10 +29,13 @@ public class XMLGenerator {
 	double verticalRate = 0.0;
 	double horizontalRate = 100.0;
 
-	ArrayList<Key> keyArray[];
+	ArrayList<Key> firstKeyArray[];
+	ArrayList<Key> secondKeyArray[];
 
 	String totalVerticalGap = "0%p";
 	String totalHorizontalGap = "0%p";
+	
+	
 
 	/**
 	 * XMLGenerator Constructor.
@@ -36,23 +48,31 @@ public class XMLGenerator {
 		this.maxRow = maxRow;
 		this.maxCol = maxCol;
 		this.verticalRate = verticalRate;
+		
 
-		keyArray = new ArrayList[numOfRow];
+		firstKeyArray = new ArrayList[numOfRow];
+		secondKeyArray = new ArrayList[numOfRow];
 
 		try {
-			for (int idx = 0; idx < keyArray.length; idx++) {
-				keyArray[idx] = new ArrayList<Key>();
+			for (int idx = 0; idx < firstKeyArray.length; idx++) {
+				firstKeyArray[idx] = new ArrayList<Key>();
+				secondKeyArray[idx] = new ArrayList<Key>();
 			}
-			XMLFile = new FileOutputStream(xmlPath + File.separator
-					+ "keyboard.xml");
-			XMLFileWriter = new BufferedWriter(new OutputStreamWriter(XMLFile,
-					"UTF-8"));
+			shiftXMLFile = new FileOutputStream(xmlPath + File.separator + "mykey_keyboard.xml");
+			shiftXMLFileWriter = new BufferedWriter(new OutputStreamWriter(shiftXMLFile,"UTF-8"));
+			notShiftXMLFile = new FileOutputStream(xmlPath + File.separator + "mykey_shift_keyboard.xml");
+			notShiftXMLFileWriter = new BufferedWriter(new OutputStreamWriter(notShiftXMLFile,"UTF-8"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * key Table Read method
+	 * @param firstLayoutInfo
+	 * @param secondLayoutInfo
+	 */
 	public void readKeyArray(String firstLayoutInfo, String secondLayoutInfo) {
 		String[] readLine = null;
 		String[] tmpStr = null;
@@ -63,6 +83,10 @@ public class XMLGenerator {
 		int[] keyCode = null;
 		int keyWidth = 0;
 		int keyHeight = 0;
+		
+		// Point notion.
+		int xPos = 0;
+		int yPos = 0;
 
 		String keyLabel = null;
 		String keyIcon = null;
@@ -83,20 +107,30 @@ public class XMLGenerator {
 				keyWidth = Integer.parseInt(tmpStr[1]);
 				keyHeight = Integer.parseInt(tmpStr[2]);
 
-				keyLabel = tmpStr[3];
-				keyIcon = tmpStr[4];
+				xPos = Integer.parseInt(tmpStr[3]);
+				yPos = Integer.parseInt(tmpStr[4]);
+				
+				keyLabel = tmpStr[5];
+				keyIcon = tmpStr[6];
 
-				keyEdgeFlags = Integer.parseInt(tmpStr[5]);
-				isRepeatable = Integer.parseInt(tmpStr[6]);
+				keyEdgeFlags = Integer.parseInt(tmpStr[7]);
+				isRepeatable = Integer.parseInt(tmpStr[8]);
 
-				rowCount = Integer.parseInt(tmpStr[7]);
+				rowCount = Integer.parseInt(tmpStr[9]);
 
-				// instantiation
-				Key keyInfo = new Key(keyCode, keyWidth, keyHeight, keyLabel,
-						keyIcon, keyEdgeFlags, isRepeatable);
+				/*
+				 * instantiation
+				 * keyCode, keyWidth, keyHeight, xPos, yPos, keyLabel, keyIcon
+				 * keyEdgeFlags, isRepeatable
+				 */
+				Key keyInfo = new Key(keyCode, keyWidth, keyHeight, xPos, yPos,
+						keyLabel, keyIcon, keyEdgeFlags, isRepeatable);
 
-				keyArray[rowCount - 1].add(keyInfo);
+				firstKeyArray[rowCount - 1].add(keyInfo);
 			}
+			// another XML create code
+			
+			
 			makeXML();
 
 		} catch (Exception e) {
@@ -112,25 +146,25 @@ public class XMLGenerator {
 		// XML File Creator
 		
 		try {
-		XMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		XMLFileWriter.newLine();
-		XMLFileWriter
+		shiftXMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		shiftXMLFileWriter.newLine();
+		shiftXMLFileWriter
 				.append("<Keyboard xmlns:android=\"http://schemas.android.com/apk/res/android\"");
-		XMLFileWriter.append(" android:horizontalGap=\"" + totalHorizontalGap
+		shiftXMLFileWriter.append(" android:horizontalGap=\"" + totalHorizontalGap
 				+ "\"");
-		XMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
+		shiftXMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
 				+ "\">");
-		XMLFileWriter.newLine();
+		shiftXMLFileWriter.newLine();
 
 		writeKeyLayoutInfo(); // write detail information of each key
 
-		XMLFileWriter.append("</Keyboard>");
-		XMLFileWriter.newLine();
+		shiftXMLFileWriter.append("</Keyboard>");
+		shiftXMLFileWriter.newLine();
 
-		XMLFileWriter.flush();
+		shiftXMLFileWriter.flush();
 		
-		XMLFile.close();
-		XMLFileWriter.close();
+		shiftXMLFile.close();
+		shiftXMLFileWriter.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -36,9 +36,7 @@ public class TableReader {
 			this.javaPath = javaPath;
 			tableReader = new BufferedReader(new InputStreamReader(tableFile,
 					"UTF-8"));
-			/*
-			 * need function for readTable readTable();
-			 */
+			readTable();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,6 +73,7 @@ public class TableReader {
 					maxRow = Integer.parseInt(readLine);
 					numOfRow = 0;
 					numOfXML++; // XML File Counting
+					prevYPos = -1;
 					isLayoutInfo = false;
 					isPhonemeInfo = false;
 				}
@@ -137,10 +136,12 @@ public class TableReader {
 					}
 				}
 				
+				// Phoneme information write
 				if(isPhonemeInfo) {
 					keyInfo = keyInfo.concat(readLine + "\n");
 				}
 				
+				// String key information write
 				if(isStringKeyInfo) {
 					stringKeyInfo = stringKeyInfo.concat(readLine+"\n");
 				}

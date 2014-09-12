@@ -4,43 +4,116 @@ import java.util.*;
 
 import key_process.*;
 
+
+//TODO: Redesign module structure of MYKey's Automata modules.
+
+/**
+ * This class is typical class file of Korean Automata Module.
+ * It's only conduct Korean combination.
+ * This module has a lot of states, and it's driven by table of state.
+ * In addition, It will been written when I make comment type of example letter.
+ * Because, if it's not written by Korean, it never explain to what is mean.   
+ * @author sunghoonpark
+ */
 public class KoreanAutomata {
-	public static final int ST_EMPTY = 0; 						// 초기 EMPTY상태
-	public static final int ST_FIRST = 1; 						// 초성
-	public static final int ST_VOWEL = 2; 						// 중성
-	public static final int ST_AREA = 3;						// 아레아
-	public static final int ST_FIRST_VOWEL = 4; 				// 초성+중성
-	public static final int ST_FIRST_AREA = 5;					// 초성+아레아
-	public static final int ST_FIRST_VOWEL_AND_FIRST = 6;		// [초성+중성] + [초성] 상태
-	public static final int ST_SINGLE_FINAL = 7; 				// 단일종성
-	public static final int PROC1 = 8;							// <초성+중성> + [초성+아레아] 상태
-	public static final int PROC2 = 9;							// <초성+중성> + [초성+중성] 상태
-	public static final int VERIFYCOMB = 10; 					// 종성간 조합 가능여부 조사 상태
-	public static final int ST_MULTI_FINAL = 11; 				// 복합종성
-	public static final int ST_SINGLE_FINAL_AND_FIRST = 12; 	// [단일종성]+[초성] 상태
-	public static final int PROC3 = 13;							// <단일종성> + [초성+아레아] 상태
-	public static final int PROC4 = 14;							// <단일종성> + [초성+중성] 상태
-	public static final int ST_ERROR = 15; 						// 에러 처리 상태
-
-	public static final int FIRST_CONSONANT = 0; 	// 초성
-	public static final int VOWEL = 1; 				// 중성
-	public static final int FINAL_CONSONANT = 2; 	// 종성
-	public static final int AREA = 3;				// 아레아
-	public static final int UNKNOWN = 4;
-
-	private static final int NUM_STATE = 16;
-	private static final int NUM_INPUT = 4;
+	public static final int ST_EMPTY = 0;						//No letters.
+	public static final int ST_FIRST = 1;						//First consonant only.															ex>'ㄱ'
+	public static final int ST_VOWEL = 2;						//Vowel only.																	ex>'ㅏ'
+	public static final int ST_FIRST_VOWEL = 3;					//Combined by first consonant and vowel.										ex>'가'
+	public static final int ST_FIRST_VOWEL_AND_FIRST = 4;		//Combined by first consonant and vowel and first consonant.					ex>'가''ㅉ'
+	public static final int ST_SINGLE_FINAL = 5;				//Combined by first consonant, vowel and final consonant.						ex>'간'
+	public static final int PROC1 = 6;							//Process to choice state when inserted vowel from ST_FIRST_VOWEL_AND_FIRST. 
+	public static final int VERIFYCOMB = 7;						//Verify that combination is possible or impossible and transfer state to ST_SINGLE_FINAL_AND_FIRST or ST_MULTI_FINAL from ST_SINGLE_FINAL.
+	public static final int ST_MULTI_FINAL = 8;					//Combined by first consonant, vowel and two final consonant.					ex>'갂'					
+	public static final int ST_SINGLE_FINAL_AND_FIRST = 9;		//Combined by first consonant, vowel and final consonant, and first consonant. 	ex>'각''ㄴ'
+	public static final int PROC2 = 10;							//Process to choice state when inserted vowel from ST_SINGLE_FINAL_AND_FIRST.
+	public static final int ST_ERROR = 11;						//When inserted letter is can't combine from existed letter, it will transfer ST_ERROR
 	
-	private int currentState;
-	private int previousState;
-	private boolean isFinalInput;
-	private Buffer buffer;
-	private CombinationState resultState;
-	private int phonemeInt[];
-	private ArrayList<CombinationState> stateArr;
-	private int stTrTable[][];
-	private boolean isEnter;
+	public static final int FIRST_CONSONANT = 0;				//It's type of Korean letter. In Korean Chosung.		ex>'ㄱ', 'ㄴ', 'ㄷ', ...
+	public static final int VOWEL = 1;							//It's type of Korean letter. In Korean Jongsung.		ex>'ㅏ', 'ㅑ', 'ㅓ', ...
+	public static final int FINAL_CONSONANT = 2;				//It's type of Korean letter. In Korean Jungsung.		ex>'ㄱ', 'ㄱㅅ', 'ㄲ', ...
+	public static final int UNKNOWN = 3;						//Unknown type input, it exist for processing error.
 	
+	public static final int NUM_STATE = 12;						//Number of state.
+	public static final int NUM_INPUT = 4;						//Number of input types.
+	
+
+	private CombinationState resultState;						//This reference exist for Strategy Pattern.
+	private ArrayList<CombinationState> stateArr;				//This template really has instance of state.
+	
+	private int currentState;									//Current state.
+	private int previousState;									//Previous state.
+	private boolean isFinalInput;								//Flag to check final consonant.
+	private int stTrTable[][];									//Table of state. It's made up of integer array. Because table driven method use static integer variable.
+	
+	private Buffer buffer;										//TODO: Repeat discussion Is it really need?.	
+	private boolean isEnter;									//TODO: Repeat discussion Is it really need?.
+	private int phonemeInt[];									//TODO: Repeat discussion. Is it really need??
+	
+	
+	
+	public KoreanAutomata(Buffer buffer) {
+		this.buffer = buffer;
+		
+		isEnter = true;
+		phonemeInt = new int[3];
+		currentState = ST_EMPTY;
+		previousState = currentState;
+
+		isFinalInput = false;
+
+		stateArr = new ArrayList<CombinationState>();
+		createState();
+
+		stTrTable = new int[NUM_STATE][NUM_INPUT];
+		createCombinationTable();
+	}
+	
+	
+	private void createState() {
+		stateArr.add(new StEmpty()); 				
+		stateArr.add(new StFirst());			    
+		stateArr.add(new StVowel()); 				
+		stateArr.add(new StFirstVowel());
+		stateArr.add(new StFirstVowelAndFirst());
+		stateArr.add(new StSingleFinal()); 			
+		stateArr.add(new Proc1());										
+		stateArr.add(new VerifyComb()); 			
+		stateArr.add(new StMultiFinal()); 			
+		stateArr.add(new StSingleFinalAndFirst());
+		stateArr.add(new Proc2());
+		stateArr.add(new StError()); 				
+	}
+	
+	
+	private void createCombinationTable() {
+		
+		for(int i = 0; i < stTrTable.length; i++){
+			for(int j = 0; j <stTrTable[i].length; j++){
+				stTrTable[i][j] = ST_ERROR;
+			}
+		}
+		
+		
+		stTrTable[ST_EMPTY][FIRST_CONSONANT] = ST_FIRST; 
+		stTrTable[ST_EMPTY][VOWEL] = ST_VOWEL;           
+		stTrTable[ST_EMPTY][FINAL_CONSONANT] = ST_FIRST; 
+		
+		stTrTable[ST_FIRST][VOWEL] = ST_FIRST_VOWEL;     
+
+		stTrTable[ST_FIRST_VOWEL][FIRST_CONSONANT] = ST_FIRST_VOWEL_AND_FIRST; 
+		stTrTable[ST_FIRST_VOWEL][FINAL_CONSONANT] = ST_SINGLE_FINAL;          
+		
+		stTrTable[ST_FIRST_VOWEL_AND_FIRST][VOWEL] = PROC1;          
+		
+		stTrTable[ST_SINGLE_FINAL][FIRST_CONSONANT] = VERIFYCOMB; 			
+		stTrTable[ST_SINGLE_FINAL][VOWEL] = PROC2;                      	
+		stTrTable[ST_SINGLE_FINAL][FINAL_CONSONANT] = VERIFYCOMB;           
+		
+		stTrTable[ST_MULTI_FINAL][VOWEL] = PROC2;
+		
+		stTrTable[ST_SINGLE_FINAL_AND_FIRST][VOWEL] = PROC2;
+	}
 	
 	public void startCombine(boolean isRenew) {
 		ArrayList<Integer> tmpBuffer = buffer.getPhoBuffer();
@@ -65,8 +138,20 @@ public class KoreanAutomata {
 		
 		buffer.appendLetter(phonemeInt);
 	}
+	
+	private int verifyPhonemeCategory(int phoneme) {
+		int tmp = phoneme / 100;
 
-
+		if (tmp == 40)
+			return FIRST_CONSONANT;
+		else if (tmp == 41)
+			return VOWEL;
+		else if(tmp == 42)
+			return FINAL_CONSONANT;
+		else
+			return UNKNOWN;
+	}
+	
 	public int getPreviousState(){
 		return previousState;
 	}
@@ -90,86 +175,6 @@ public class KoreanAutomata {
 	public void setIsFinalInput(boolean isFinalInput) {
 		this.isFinalInput = isFinalInput;
 	}
-
-	
-	private void createCombinationTable() {
-		
-		for(int i = 0; i < stTrTable.length; i++){
-			for(int j = 0; j <stTrTable[i].length; j++){
-				stTrTable[i][j] = ST_ERROR;
-			}
-		}
-		
-		//[EMPTY]에서 전이
-		stTrTable[ST_EMPTY][FIRST_CONSONANT] = ST_FIRST; //EMPTY -초성-> 초성
-		stTrTable[ST_EMPTY][VOWEL] = ST_VOWEL;           //EMPTY -중성-> 중성
-		stTrTable[ST_EMPTY][FINAL_CONSONANT] = ST_FIRST; //EMPTY -종성-> 초성
-		stTrTable[ST_EMPTY][AREA] = ST_AREA; 			 //EMPTY -아레아-> 아레아
-		
-		//[초성]에서 전이
-		stTrTable[ST_FIRST][VOWEL] = ST_FIRST_VOWEL;     //초성 -중성-> 초성+중성
-		stTrTable[ST_FIRST][AREA] = ST_FIRST_AREA; 		 //초성 -아레아-> 초성+아레아
-		
-		//[초성+중성]에서 전이
-		stTrTable[ST_FIRST_VOWEL][FIRST_CONSONANT] = ST_FIRST_VOWEL_AND_FIRST; // 초성+중성 -초성-> [초성+중성]+[초성]
-		stTrTable[ST_FIRST_VOWEL][FINAL_CONSONANT] = ST_SINGLE_FINAL;          // 초성+중성 -종성-> 단일종성
-		
-		//[초성+중성]+[초성]에서 전이
-		stTrTable[ST_FIRST_VOWEL_AND_FIRST][VOWEL] = PROC2;           // [초성+중성]+[초성] -중성-> <초성+중성> + [초성+중성] (PROC2)
-		stTrTable[ST_FIRST_VOWEL_AND_FIRST][AREA] = PROC1;			  // [초성+중성]+[초성] -아레아-> <초성+중성> + [초성+아레아] (PROC1)
-		
-		//단일종성에서 전이
-		stTrTable[ST_SINGLE_FINAL][FIRST_CONSONANT] = VERIFYCOMB; 			// 단일종성 -초성-> 조합검증
-		stTrTable[ST_SINGLE_FINAL][VOWEL] = PROC2;                      	// 단일종성 -중성-> <초성+중성> + [초성+중성] (PROC2)
-		stTrTable[ST_SINGLE_FINAL][FINAL_CONSONANT] = VERIFYCOMB;           // 단일종성 -종성-> 조합검증 (ST_VERIFY_COMB)
-		stTrTable[ST_SINGLE_FINAL][AREA] = PROC1;                      		// 단일종성 -아레아-> <초성+중성> + [초성+아레아] (PROC1)
-		
-		//복합종성에서 전이
-		stTrTable[ST_MULTI_FINAL][VOWEL] = PROC4;           // 복합종성 -중성-> <단일종성> + [초성+중성] (PROC4)
-		stTrTable[ST_MULTI_FINAL][AREA] = PROC3;            // 복합종성 -아레아-> <단일종성> + [초성+아레아] (PROC3)
-		
-		//[단일종성]+[초성]에서 전이
-		stTrTable[ST_SINGLE_FINAL_AND_FIRST][VOWEL] = PROC4;           // [단일종성]+[초성] -중성-> <단일종성> + [초성+중성] (PROC4)
-		stTrTable[ST_SINGLE_FINAL_AND_FIRST][AREA] = PROC3;            // [단일종성]+[초성] -중성-> <단일종성> + [초성+아레아] (PROC3)
-
-	}
-
-	// 상태 저장
-	private void createState() {
-		stateArr.add(new StEmpty()); 				// 초기상태 0
-		stateArr.add(new StFirst());			    // 초성 1
-		stateArr.add(new StVowel()); 				// 중성 2
-		stateArr.add(new StArea());					// 아레아 3
-		stateArr.add(new StFirstVowel()); 			// 초성+중성 4
-		stateArr.add(new StFirstArea());			// 초성+아레아 5
-		stateArr.add(new StFirstVowelAndFirst());   // [초성+중성] + [초성] 상태 6
-		stateArr.add(new StSingleFinal()); 			// 단일종성 7
-		stateArr.add(new Proc1());					// <초성+중성> + [초성+아레아] 8
-		stateArr.add(new Proc2());					// <초성+중성> + [초성+중성] 9
-		stateArr.add(new VerifyComb()); 			// 조합 가능여부 조사 상태 10
-		stateArr.add(new StMultiFinal()); 			// 복합종성 11
-		stateArr.add(new StSingleFinalAndFirst());  // [단일종성] + [초성] 상태 12
-		stateArr.add(new Proc3());					// <단일종성> + [초성+아레아] 13
-		stateArr.add(new Proc4());					//<단일종성> + [초성+중성]  14
-		stateArr.add(new StError()); 				// 에러 처리 상태 15
-	}
-
-	
-	private int verifyPhonemeCategory(int phoneme) {
-		int tmp = phoneme / 100;
-
-		if (tmp == 40)
-			return FIRST_CONSONANT;
-		else if (tmp == 41)
-			return VOWEL;
-		else if(tmp == 82 || tmp == 87)
-			return AREA;
-		else if(tmp == 42)
-			return FINAL_CONSONANT;
-		else
-			return UNKNOWN;
-	}
-
 	
 	public void initPhonemeInt() {
 		for (int i = 0; i < phonemeInt.length; i++)
@@ -185,22 +190,4 @@ public class KoreanAutomata {
 		currentState = ST_EMPTY;
 		previousState = currentState;
 	}
-
-	public KoreanAutomata(Buffer buffer) {
-		this.buffer = buffer;
-		
-		isEnter = true;
-		phonemeInt = new int[3];
-		currentState = ST_EMPTY;
-		previousState = currentState;
-
-		isFinalInput = false;
-
-		stateArr = new ArrayList<CombinationState>();
-		createState();
-
-		stTrTable = new int[NUM_STATE][NUM_INPUT];
-		createCombinationTable();
-	}
-
 }

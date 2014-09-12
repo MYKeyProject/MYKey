@@ -34,8 +34,6 @@ public class XMLGenerator {
 
 	String totalVerticalGap = "0%p";
 	String totalHorizontalGap = "0%p";
-	
-	
 
 	/**
 	 * XMLGenerator Constructor.
@@ -129,8 +127,38 @@ public class XMLGenerator {
 				firstKeyArray[rowCount - 1].add(keyInfo);
 			}
 			// another XML create code
-			
-			
+			readLine = secondLayoutInfo.split("\n");
+
+			for (int idx = 0; idx < readLine.length; idx++) {
+				tmpStr = readLine[idx].split("\t");
+
+				tmpKeyCode = tmpStr[0].split(",");
+				keyCode = new int[tmpKeyCode.length];
+				for (int codeNum = 0; codeNum < tmpKeyCode.length; codeNum++) {
+					keyCode[codeNum] = Integer.parseInt(tmpKeyCode[codeNum]);
+				}
+				keyWidth = Integer.parseInt(tmpStr[1]);
+				keyHeight = Integer.parseInt(tmpStr[2]);
+
+				xPos = Integer.parseInt(tmpStr[3]);
+				yPos = Integer.parseInt(tmpStr[4]);
+
+				keyLabel = tmpStr[5];
+				keyIcon = tmpStr[6];
+
+				keyEdgeFlags = Integer.parseInt(tmpStr[7]);
+				isRepeatable = Integer.parseInt(tmpStr[8]);
+
+				rowCount = Integer.parseInt(tmpStr[9]);
+				/*
+				 * keyCode, keyWidth, keyHeight, xPos, yPos, keyLabel, keyIcon
+				 * keyEdgeFlags, isRepeatable
+				 */
+				Key keyInfo = new Key(keyCode, keyWidth, keyHeight, xPos, yPos,
+						keyLabel, keyIcon, keyEdgeFlags, isRepeatable);
+
+				secondKeyArray[rowCount - 1].add(keyInfo);
+			}
 			makeXML();
 
 		} catch (Exception e) {
@@ -138,33 +166,55 @@ public class XMLGenerator {
 		}
 	}
 
+	/**
+	 * write detail key information
+	 */
 	public void writeKeyLayoutInfo() {
-		// write layout information
+		
 	}
 
+	/**
+	 * make XML File
+	 */
 	public void makeXML() {
-		// XML File Creator
-		
 		try {
-		shiftXMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		shiftXMLFileWriter.newLine();
-		shiftXMLFileWriter
-				.append("<Keyboard xmlns:android=\"http://schemas.android.com/apk/res/android\"");
-		shiftXMLFileWriter.append(" android:horizontalGap=\"" + totalHorizontalGap
-				+ "\"");
-		shiftXMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
-				+ "\">");
-		shiftXMLFileWriter.newLine();
+		// XML File Start (Header)
+			shiftXMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			shiftXMLFileWriter.newLine();
+			shiftXMLFileWriter
+					.append("<Keyboard xmlns:android=\"http://schemas.android.com/apk/res/android\"");
+			shiftXMLFileWriter.append(" android:horizontalGap=\""
+					+ totalHorizontalGap + "\"");
+			shiftXMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
+					+ "\">");
+			shiftXMLFileWriter.newLine();
+			
+			
+			notShiftXMLFileWriter.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			notShiftXMLFileWriter.newLine();
+			notShiftXMLFileWriter
+					.append("<Keyboard xmlns:android=\"http://schemas.android.com/apk/res/android\"");
+			notShiftXMLFileWriter.append(" android:horizontalGap=\""
+					+ totalHorizontalGap + "\"");
+			notShiftXMLFileWriter.append(" android:verticalGap=\"" + totalVerticalGap
+					+ "\">");
+			notShiftXMLFileWriter.newLine();
 
-		writeKeyLayoutInfo(); // write detail information of each key
+			writeKeyLayoutInfo(); // write detail information of each key
 
-		shiftXMLFileWriter.append("</Keyboard>");
-		shiftXMLFileWriter.newLine();
+			shiftXMLFileWriter.append("</Keyboard>");
+			shiftXMLFileWriter.newLine();
 
-		shiftXMLFileWriter.flush();
-		
-		shiftXMLFile.close();
-		shiftXMLFileWriter.close();
+			shiftXMLFileWriter.flush();
+			shiftXMLFile.close();
+			shiftXMLFileWriter.close();
+			
+			notShiftXMLFileWriter.append("</Keyboard>");
+			notShiftXMLFileWriter.newLine();
+
+			notShiftXMLFileWriter.flush();
+			notShiftXMLFile.close();
+			notShiftXMLFileWriter.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

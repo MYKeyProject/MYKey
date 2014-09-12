@@ -10,8 +10,11 @@ public class Key {
 	int[] keyCode = null;
 	int keyWidth = 0;
 	int keyHeight = 0;
-	int xPos = 0;
+	
+	// position of key
+	int xPos = 0; 
 	int yPos = 0;
+	
 	String keyLabel = null; // label on the key.
 	String keyIcon = null; // image icon on the key.
 	int keyEdgeFlags = 0; // left or right.
@@ -20,7 +23,7 @@ public class Key {
 	int isRepeatable = 0;
 
 	/**
-	 * Constructor.
+	 * Key Constructor.
 	 * @param keyCode
 	 * @param keyWidth
 	 * @param keyHeight

@@ -20,7 +20,6 @@ public class TableReader {
 
 	/**
 	 * Table Reader Constructor Set and Initialize variable.
-	 * 
 	 * @param tablePath
 	 * @param xmlPath
 	 * @param javaPath
@@ -37,7 +36,6 @@ public class TableReader {
 			tableReader = new BufferedReader(new InputStreamReader(tableFile,
 					"UTF-8"));
 			readTable();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

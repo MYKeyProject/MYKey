@@ -40,11 +40,39 @@ public class JAVAGenerator {
 	 * @param stringKeyInfo
 	 */
 	public void readPhonemeTable(String phonemeInfoString, String stringKeyInfo) {
-		
+		String[] readLine;
+		int phoneme = 0;
+		String[] keyCode = null;
+
+		readLine = phonemeInfoString.split("\n");
+		for (int idx = 0; idx < readLine.length; idx++) {
+			String[] tmpStr = readLine[idx].split("\t");
+			phoneme = Integer.parseInt(tmpStr[0]);
+
+			keyCode = new String[tmpStr.length - 1];
+
+			for (int num = 0; num < tmpStr.length - 1; num++) {
+				keyCode[num] = tmpStr[num + 1];
+
+			}
+			makeKeyMap(keyCode, phoneme);
+		}
+
+		readLine = stringKeyInfo.split("\n");
+		for (int idx = 0; idx < readLine.length; idx++) {
+			String[] tmpStr = readLine[idx].split("\t");
+			String stringCode = tmpStr[0];
+			if (stringCode.equals(""))
+				break; // if not exist string key.
+			String stringLabel = tmpStr[1];
+			makeStringKeyList(stringCode, stringLabel);
+		}
+		// make java file method
 	}
 	
-	public void makeStringKeyList() {
-		// ..?
+	public void makeStringKeyList(String stringKeyCode, String stringKeyLabel) {
+		stringCodeList.add(stringKeyCode);
+		stringLabelList.add(stringKeyLabel);
 	}
 	
 	/**

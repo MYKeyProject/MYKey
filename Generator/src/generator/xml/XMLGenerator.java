@@ -44,11 +44,12 @@ public class XMLGenerator {
 	double verticalRate = 0.0;
 	double horizontalRate = 100.0;
 
+	// they has layout information
 	ArrayList<Key> firstKeyArray[];
 	ArrayList<Key> secondKeyArray[];
 
-	String totalVerticalGap = "0%p";
-	String totalHorizontalGap = "0%p";
+	String totalVerticalGap = "0%p"; // verticalGap of keyboard
+	String totalHorizontalGap = "0%p"; // horizontalGap of keyboard
 
 	/**
 	 * XMLGenerator Constructor.

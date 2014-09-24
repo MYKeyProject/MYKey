@@ -29,7 +29,6 @@ public class JAVAGenerator {
 	BufferedWriter javaFileWriter;
 
 	HashMap<String, Integer> keyMap; // for fastest indexing
-
 	ArrayList<String> stringCodeList;
 	ArrayList<String> stringLabelList;
 
@@ -101,7 +100,7 @@ public class JAVAGenerator {
 			keyMap.put(keyCode[idx], phoneme);
 		}
 	}
-	
+
 	/**
 	 * write detail information
 	 */
@@ -119,7 +118,7 @@ public class JAVAGenerator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * write string key information
 	 */
@@ -138,12 +137,68 @@ public class JAVAGenerator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * create Java file
 	 */
 	public void makeJava() {
-		// java header file
+		try {
+
+			javaFileWriter.append("package com.example.android.softkeyboard;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("import java.util.HashMap;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("import java.util.ArrayList;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("public class  KeyMap {");
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tstatic HashMap<String, Integer> keyMap = new HashMap<String, Integer>();");
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tstatic ArrayList<String> stringCodeList = new ArrayList<String>();");
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tstatic ArrayList<String> stringLabelList = new ArrayList<String>();");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\tpublic KeyMap() {");
+			javaFileWriter.newLine();
+
+			writePhonemeInfo();
+			writeStringKeyInfo();
+
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t}");
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tpublic HashMap<String, Integer> getKeyMap() {");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t\treturn keyMap;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t}");
+
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tpublic ArrayList<String> getStringCodeList() {");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t\treturn stringCodeList;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t}");
+
+			javaFileWriter.newLine();
+			javaFileWriter
+					.append("\tpublic ArrayList<String> getStringLabelList() {");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t\treturn stringLabelList;");
+			javaFileWriter.newLine();
+			javaFileWriter.append("\t}");
+
+			javaFileWriter.newLine();
+			javaFileWriter.append("}");
+			javaFileWriter.flush();
+			javaFileWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
 }

@@ -22,16 +22,17 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class JAVAGenerator {
 	FileOutputStream javaFile;
 	BufferedWriter javaFileWriter;
-	
+
 	HashMap<String, Integer> keyMap; // for fastest indexing
-	
+
 	ArrayList<String> stringCodeList;
-	ArrayList<String> stringLabelList;	
-	
+	ArrayList<String> stringLabelList;
+
 	/**
 	 * JAVAGenerator Constructor.
 	 */
@@ -39,19 +40,20 @@ public class JAVAGenerator {
 		keyMap = new HashMap<String, Integer>();
 		stringCodeList = new ArrayList<String>();
 		stringLabelList = new ArrayList<String>();
-		
+
 		try {
 			javaFile = new FileOutputStream(javaPath + File.separator
 					+ "KeyMap.java");
 			javaFileWriter = new BufferedWriter(new OutputStreamWriter(
 					javaFile, "UTF-8"));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * read Phoneme information in 'key table'
+	 * 
 	 * @param phonemeInfoString
 	 * @param stringKeyInfo
 	 */
@@ -85,16 +87,63 @@ public class JAVAGenerator {
 		}
 		// make java file method
 	}
-	
+
 	public void makeStringKeyList(String stringKeyCode, String stringKeyLabel) {
 		stringCodeList.add(stringKeyCode);
 		stringLabelList.add(stringKeyLabel);
 	}
-	
+
 	/**
 	 * make HashMap(Key : key code, value : phoneme)
 	 */
 	public void makeKeyMap(String[] keyCode, int phoneme) {
-		// ...?
+		for (int idx = 0; idx < keyCode.length; idx++) {
+			keyMap.put(keyCode[idx], phoneme);
+		}
 	}
+	
+	/**
+	 * write detail information
+	 */
+	public void writePhonemeInfo() {
+		Iterator<String> it = keyMap.keySet().iterator();
+		try {
+			for (int idx = 0; idx < keyMap.size(); idx++) {
+				String key = (String) it.next();
+				int value = keyMap.get(key);
+				javaFileWriter.append("\t\tkeyMap.put(\"" + key + "\"," + value
+						+ ");");
+				javaFileWriter.newLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * write string key information
+	 */
+	public void writeStringKeyInfo() {
+		try {
+			for (int idx = 0; idx < stringCodeList.size(); idx++) {
+				String code = stringCodeList.get(idx);
+				String label = stringLabelList.get(idx);
+				javaFileWriter.append("\t\tstringCodeList.add(\"" + code
+						+ "\");");
+				javaFileWriter.append("\t\tstringLabelList.add(\"" + label
+						+ "\");");
+				javaFileWriter.newLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * create Java file
+	 */
+	public void makeJava() {
+		// java header file
+	}
+	
 }

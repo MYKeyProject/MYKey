@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
+import tool.frame.ErrorDialog;
 import tool.manager.MYKeyManager;
 import tool.panel.phonemesetting.ConsonantInfoKeyPanel;
 import tool.panel.phonemesetting.DisplayPhonemePanel;
@@ -16,14 +18,23 @@ import tool.panel.phonemesetting.SpecialKeyInfoPanel;
 import tool.panel.phonemesetting.VowelKeyInfoPanel;
 
 public class DesktopPane extends JDesktopPane {
-
+	public static KeySettingMainPanel keySettingPanel = null;
 	public DesktopPane() {
 		setBackground(Color.LIGHT_GRAY);
 		MYKeyManager.getManager().setDesktopPane(this);
 	}
+	
+	public static void setKeySettingMainPanel(KeySettingMainPanel kp){
+		keySettingPanel = kp;
+	}
 
 	public void addKeySettingPanel(KeySettingMainPanel panel) {
-		JInternalFrame inFrame = new JInternalFrame("Key Setting", true, true,
+		if(keySettingPanel != null){
+			ErrorDialog.warning("이미 키 설정 창이 떠있습니다.");
+			return;
+		}
+		keySettingPanel = panel;
+		JInternalFrame inFrame = new JInternalFrame("Key Setting", true, false,
 				true, true);
 		panel.setParent(inFrame);
 		inFrame.setSize(500, 300);

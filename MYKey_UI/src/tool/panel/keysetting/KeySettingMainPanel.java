@@ -81,6 +81,7 @@ public class KeySettingMainPanel extends JPanel {
 			}
 			keyButton.setKeyInfoSequence(phonemeSettingPanel.getPhonemeLabels());
 			keyButton.repaint();
+			DesktopPane.setKeySettingMainPanel(null);
 			exit();
 		}
 		
@@ -89,6 +90,7 @@ public class KeySettingMainPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			DesktopPane.setKeySettingMainPanel(null);
 			exit();
 		}
 	}

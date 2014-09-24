@@ -6,10 +6,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JPanel;
 
+import tool.frame.ErrorDialog;
 import tool.key.KeyButton;
 import tool.manager.MYKeyManager;
 
@@ -33,9 +35,9 @@ public class CompositionPanel extends JPanel implements MouseListener,
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.isOriginalPanel = isOriginalPanel;
-		if(isOriginalPanel){
+		if (isOriginalPanel) {
 			MYKeyManager.getManager().setOriginalCompositionPanel(this);
-		}else{
+		} else {
 			MYKeyManager.getManager().setShiftCompositionPanel(this);
 		}
 	}
@@ -64,18 +66,33 @@ public class CompositionPanel extends JPanel implements MouseListener,
 	}
 
 	public static void setMatrix(int row, int col) {
-		 CompositionPanel.row = row;
-		 CompositionPanel.col = col;
+		if (checkPosibleToFixMatrix(row, col)) {
+			CompositionPanel.row = row;
+			CompositionPanel.col = col;
+		}
 	}
-	
-	public boolean isOriginalPanel(){
+
+	public static boolean checkPosibleToFixMatrix(int row, int col) {
+		Vector vec = MYKeyManager.getManager().getOriginalKeyButtons();
+		if (vec.size() == 0) {
+			return true;
+		} else if (row <= CompositionPanel.row || col <= CompositionPanel.col) {
+			ErrorDialog.error("버튼이 있는 상태에서 행/열 조절은 확대밖에 지원하지 않습니다.");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public boolean isOriginalPanel() {
 		return isOriginalPanel;
 	}
 
 	public void setOtherCompositionPanel(CompositionPanel panel) {
 		otherPanel = panel;
 	}
-	public CompositionPanel getOtherCompositionPanel(){
+
+	public CompositionPanel getOtherCompositionPanel() {
 		return otherPanel;
 	}
 
@@ -94,12 +111,23 @@ public class CompositionPanel extends JPanel implements MouseListener,
 		MYKeyManager.getManager().addKeyButton(kb);
 		this.repaint();
 	}
-	public KeyButton loadKeyButton(int startRow, int startCol, int rowCellNum, int colCellNum, int keyCode, String text, String imagePath){
+
+	public KeyButton loadKeyButton(int startRow, int startCol, int rowCellNum,
+			int colCellNum, int keyCode, String text, String imagePath) {
 		KeyButton kb = new KeyButton(startRow, startCol, rowCellNum,
 				colCellNum, this, true);
 		kb.setKeyCode(keyCode);
 		kb.setLabelName(text);
+		kb.setTextKey();
 		kb.setImagePath(imagePath);
+		if (imagePath != null) {
+			File f = new File(imagePath);
+			if (f.exists()) {
+				kb.setImageKey();
+			} else {
+				kb.setImagePath(null);
+			}
+		}
 		this.add(kb);
 		keyButtons.add(kb);
 		MYKeyManager.getManager().addKeyButton(kb);
@@ -128,20 +156,23 @@ public class CompositionPanel extends JPanel implements MouseListener,
 			}
 		}
 	}
-	
-	public void relocatingButton(int originRow, int originCol, int originRowCellNum, int originColCellNum, int targetRow, int targetCol, int targetRowCellNum, int targetColCellNum){
+
+	public void relocatingButton(int originRow, int originCol,
+			int originRowCellNum, int originColCellNum, int targetRow,
+			int targetCol, int targetRowCellNum, int targetColCellNum) {
 		KeyButton btn = findKeyButtonFromMatrix(originRow, originCol);
-		if(btn == null){
+		if (btn == null) {
 			return;
 		}
-		btn.saveMatrixAndLocation(targetRow, targetCol, targetRowCellNum, targetColCellNum);
+		btn.saveMatrixAndLocation(targetRow, targetCol, targetRowCellNum,
+				targetColCellNum);
 		this.repaint();
 	}
-	
-	public KeyButton findKeyButtonFromMatrix(int row, int col){
-		for(int i=0;i<keyButtons.size();i++){
+
+	public KeyButton findKeyButtonFromMatrix(int row, int col) {
+		for (int i = 0; i < keyButtons.size(); i++) {
 			KeyButton btn = keyButtons.get(i);
-			if(btn.getStartRow() == row && btn.getStartCol() == col){
+			if (btn.getStartRow() == row && btn.getStartCol() == col) {
 				return btn;
 			}
 		}

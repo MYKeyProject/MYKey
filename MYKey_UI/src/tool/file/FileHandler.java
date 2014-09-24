@@ -175,4 +175,32 @@ public class FileHandler {
 		File root = new File(path);
 		deleteRecursive(root);
 	}
+	
+	public static File findFileWithoutExtension(String directory, String fileName){
+		File dir = new File(directory);
+		if(!dir.isDirectory()){
+			return null;
+		}else{
+			File[] c = dir.listFiles();
+			for(File file : c){
+				if(file.getName().startsWith(fileName)){
+					return file;
+				}
+			}
+			return null;
+		}
+	}
+	  public static String findExtensionName(String path) { 
+	        
+	        String fullPath = path;
+	        
+	        int firstIndex = 0;
+	        
+	        while(fullPath.indexOf('.') != -1) {
+	            firstIndex = fullPath.indexOf('.');
+	            fullPath = fullPath.substring(firstIndex+1);
+	        }
+	        
+	        return fullPath;
+	    }
 }

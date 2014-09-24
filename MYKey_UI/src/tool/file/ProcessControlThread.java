@@ -33,7 +33,7 @@ public class ProcessControlThread{
 			BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
-				System.out.println(inputLine);
+				System.out.println("");
 			}
 			in.close();
 		}

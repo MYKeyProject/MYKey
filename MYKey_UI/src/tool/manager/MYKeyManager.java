@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +26,8 @@ import tool.panel.display.DevicePanel;
 import tool.panel.keysetting.DesktopPane;
 import tool.panel.keysetting.KeySettingMainPanel;
 import tool.panel.phonemesetting.DisplayPhonemePanel;
+import tool.tempUse.SequenceMainPanel;
 import tool.tempUse.SequencePanel;
-import tool.tempUse.SequenceStart;
 
 public class MYKeyManager {
 	public static int KOREAN_PHONEME_MAX_IDX = 3999;
@@ -53,14 +54,15 @@ public class MYKeyManager {
 	private String targetProjectPath = currentDirectoryPath + File.separator
 			+ "project" + File.separator + "targetProject";
 	private String builderPath = currentDirectoryPath + File.separator + "libs"
-			+ File.separator + "builder.jar";		
+			+ File.separator + "builder.jar";
 	private String jdkPath = currentDirectoryPath + File.separator + "libs"
-					+ File.separator + "jdk1.8.0_05" + File.separator + "bin";
+			+ File.separator + "jdk6u26" + File.separator + "bin";
 	private String sdkPath = currentDirectoryPath + File.separator + "libs"
-					+ File.separator + "sdk";
+			+ File.separator + "sdk";
+	private String jrePath = currentDirectoryPath + File.separator + "libs"
+			+ File.separator + "jdk6u26" + File.separator +"jre" + File.separator + "bin";
 
-
-	private SequenceStart sequenceFrame = null;
+	private SequenceMainPanel sequenceMainPanel = null;
 	private SequencePanel sequencePanel = null;
 
 	public static MYKeyManager getManager() {
@@ -85,8 +87,8 @@ public class MYKeyManager {
 	private MYKeyManager() {
 	}
 
-	public void setSequenceStart(SequenceStart ss) {
-		this.sequenceFrame = ss;
+	public void setSequenceMain(SequenceMainPanel ss) {
+		this.sequenceMainPanel = ss;
 	}
 
 	public void setSequencePanel(SequencePanel sp) {
@@ -107,6 +109,12 @@ public class MYKeyManager {
 		for (int i = 0; i < size; i++) {
 			allShiftKeyButtons.get(0).removeOnly();
 		}
+		sequenceMainPanel.init();
+		if(pressedKeyInfo != null){
+			pressedKeyInfo.cancelClick();
+			setPressedKeyInfo(null);
+		}
+		setKeySeqnence(null);
 	}
 
 	public void setMatrix(int row, int col) {
@@ -169,16 +177,16 @@ public class MYKeyManager {
 		}
 		pressedKeyInfo = ki;
 		if (pressedKeyInfo == null) {
-			sequenceFrame.setStartEnable(false);
-			sequenceFrame.setEndEnable(false);
+			sequenceMainPanel.setStartEnable(false);
+			sequenceMainPanel.setEndEnable(false);
 			displayPhonemePanel.initText();
 		} else {
 			if (pressedKeyInfo instanceof SpecialKeyInfo) {
-				sequenceFrame.setStartEnable(false);
+				sequenceMainPanel.setStartEnable(false);
 			} else {
-				sequenceFrame.setStartEnable(true);
+				sequenceMainPanel.setStartEnable(true);
 			}
-			sequenceFrame.setEndEnable(false);
+			sequenceMainPanel.setEndEnable(false);
 			displayPhonemePanel.setText(pressedKeyInfo.getLabel());
 		}
 	}
@@ -314,13 +322,15 @@ public class MYKeyManager {
 		String javaPath = projectPath + File.separator + "src" + File.separator
 				+ "com" + File.separator + "example" + File.separator
 				+ "android" + File.separator + "softkeyboard";
-		// Add Generator Part
+//		new TableReader(tablePath, xmlPath, javaPath);
+// have to remove comment after merge with generator
 	}
 
 	public String saveTables(String path) {
 		if (path == null) {
 			return null;
 		}
+		copyAllKeyButtonImageToMYKey();
 		FileWriter fw;
 		BufferedWriter bw;
 		try {
@@ -405,10 +415,13 @@ public class MYKeyManager {
 				} else {
 					keyLabel = "!no";
 					if (btn.getImagePath() != null) {
-						keyIcon = btn.getImagePath();
+						keyIcon = getImagePathOfTable(btn.getImagePath());
 					} else {
 						keyIcon = "!no";
 					}
+				}
+				if(keyLabel.equals("!no") && keyIcon.equals("!no")){
+					keyLabel = " ";
 				}
 				keyEdgeFlags = 0;
 				if (prevYPos != yPos) {
@@ -512,6 +525,8 @@ public class MYKeyManager {
 				String imagePath = split[6];
 				if (imagePath.equals("!no")) {
 					imagePath = null;
+				}else{
+					imagePath = getImagePathOfMYKey(imagePath);
 				}
 				KeyButton btn = panel.loadKeyButton(startRow, startCol,
 						rowCellNum, colCellNum, keyCode, text, imagePath);
@@ -550,11 +565,11 @@ public class MYKeyManager {
 						KeyButton btn = findKeyButtonFromKeycode(Integer
 								.parseInt(split2[0]));
 						btn.saveKeyInfo(ki, split2.length);
-					}else{
+					} else {
 						KeySequence ks = new KeySequence(ki);
-						for(int k=0;k<split2.length;k++){
+						for (int k = 0; k < split2.length; k++) {
 							ks.appendKeyButtons(findKeyButtonFromKeycode(Integer
-								.parseInt(split2[k])));
+									.parseInt(split2[k])));
 						}
 						ks.update();
 					}
@@ -575,6 +590,163 @@ public class MYKeyManager {
 		FileHandler.copyDirectory(src, dst);
 	}
 
+	public void copyAllKeyButtonImageToMYKey() {
+		int num = 0;
+		File imageNum = new File(currentDirectoryPath + File.separator + "res"
+				+ File.separator + "img" + File.separator + "imagenum");
+
+		if (imageNum.exists()) {
+			FileReader fr;
+			try {
+				fr = new FileReader(imageNum);
+				BufferedReader br = new BufferedReader(fr);
+				num = Integer.parseInt(br.readLine());
+				br.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (int i = 0; i < allKeyButtons.size(); i++) {
+			KeyButton btn = allKeyButtons.get(i);
+			if (btn.isTextButton()) {
+				continue;
+			}
+			File f = new File(btn.getImagePath());
+			if (!f.exists()) {
+				btn.setImagePath(null);
+				btn.setTextKey();
+				continue;
+			} else if (!f.getParent().equals(
+					currentDirectoryPath + File.separator + "res"
+							+ File.separator + "img")) {
+				num++;				
+				String fileExtension = FileHandler.findExtensionName(f.getName());
+				String imageFileName = "key" + num + "." + fileExtension;
+
+				// File copy to MYKey Resource
+				FileHandler.copyFile(btn.getImagePath(), currentDirectoryPath
+						+ File.separator + "res" + File.separator + "img"
+						+ File.separator + imageFileName);
+
+				btn.setImagePath(currentDirectoryPath + File.separator + "res"
+						+ File.separator + "img" + File.separator
+						+ imageFileName);
+			} else {
+				String imageFileName = f.getName();
+				FileHandler.copyFile(btn.getImagePath(), targetProjectPath
+						+ File.separator + "res" + File.separator
+						+ "drawable-hpdi" + File.separator + imageFileName);
+			}
+		}
+		for (int i = 0; i < allShiftKeyButtons.size(); i++) {
+			KeyButton btn = allShiftKeyButtons.get(i);
+			if (btn.isTextButton()) {
+				continue;
+			}
+			File f = new File(btn.getImagePath());
+			if (!f.exists()) {
+				btn.setImagePath(null);
+				btn.setTextKey();
+				continue;
+			} else if (!f.getParent().equals(
+					currentDirectoryPath + File.separator + "res"
+							+ File.separator)) {
+				num++;
+				String fileExtension = FileHandler.findExtensionName(f.getName());
+				String imageFileName = "key" + num + "." + fileExtension;
+
+				// File copy to MYKey Resource
+				FileHandler.copyFile(btn.getImagePath(), currentDirectoryPath
+						+ File.separator + "res" + File.separator + "img"
+						+ File.separator + imageFileName);
+
+				btn.setImagePath(currentDirectoryPath + File.separator + "res"
+						+ File.separator + "img" + File.separator
+						+ imageFileName);
+			} else {
+				String imageFileName = f.getName();
+				FileHandler.copyFile(btn.getImagePath(), targetProjectPath
+						+ File.separator + "res" + File.separator
+						+ "drawable-hpdi" + File.separator + imageFileName);
+			}
+		}
+
+		try {
+			FileWriter fw = new FileWriter(imageNum);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(Integer.toString(num));
+			bw.flush();
+			bw.close();
+		} catch (Exception e) {
+
+		}
+	}
+	
+	public void copyAllKeyButtonImageToProject() {
+		for (int i = 0; i < allKeyButtons.size(); i++) {
+			KeyButton btn = allKeyButtons.get(i);
+			if (btn.isTextButton()) {
+				continue;
+			}
+			File f = new File(btn.getImagePath());
+			if (!f.exists()) {
+				btn.setImagePath(null);
+				btn.setTextKey();
+				continue;
+			} else {
+				// File copy to SoftKeyboard Project
+				FileHandler.copyFile(btn.getImagePath(), targetProjectPath
+						+ File.separator + "res" + File.separator
+						+ "drawable-hdpi" + File.separator + f.getName());
+			}
+		}
+		for (int i = 0; i < allShiftKeyButtons.size(); i++) {
+			KeyButton btn = allShiftKeyButtons.get(i);
+			if (btn.isTextButton()) {
+				continue;
+			}
+			File f = new File(btn.getImagePath());
+			if (!f.exists()) {
+				btn.setImagePath(null);
+				btn.setTextKey();
+				continue;
+			} else {
+				// File copy to SoftKeyboard Project
+				FileHandler.copyFile(btn.getImagePath(), targetProjectPath
+						+ File.separator + "res" + File.separator
+						+ "drawable-hpdi" + File.separator + f.getName());
+			}
+		}
+	}
+
+	public String getImagePathOfTable(String imagePath) { // use it when make
+															// ImagePath
+		File f = new File(imagePath);
+		if (f.exists()) {
+			String tableImageName = f.getName();
+			tableImageName = tableImageName.substring(0,tableImageName.lastIndexOf("."));
+			return "@drawable/" + tableImageName;
+		} else {
+			return "!no";
+		}
+	}
+
+	public String getImagePathOfMYKey(String imagePath) {
+		String[] str = imagePath.split("/");
+		if (str.length != 2 || !str[0].equals("@drawable")) {
+			return null;
+		} else {
+			File f = FileHandler.findFileWithoutExtension(currentDirectoryPath
+					+ File.separator + "res" + File.separator + "img", str[1]);
+			if (f == null) {
+				return null;
+			} else {
+				return f.getAbsolutePath();
+			}
+		}
+	}
+
 	public void makeAPKofCurrentWorkingSpace(String apkPath, String apkName,
 			boolean install) {
 		String tempTablePath = currentDirectoryPath + File.separator
@@ -590,28 +762,28 @@ public class MYKeyManager {
 			return;
 		}
 		copyBaseProject(baseProjectPath, targetProjectPath);
+		copyAllKeyButtonImageToProject();
 		generateXmlAndJava(loadFilePath, targetProjectPath);
 
 		try {
 			ProcessBuilder pb;
 			if (!install) {
-				String args[] = { jdkPath + File.separator + "java", "-jar",
+				String args[] = { jrePath + File.separator + "java", "-jar",
 						builderPath, "-project", targetProjectPath, "-sdk",
 						sdkPath, "-jdk", jdkPath, "-keyname", "testKey",
-						"-keypass", "123456", "-apkname", apkName, "-apkpath", "-sdkversion", "19.0.2",
-						apkPath };
-				for(int i=0;i<args.length;i++){
-					System.out.println(args[i]);
+						"-keypass", "123456", "-apkname", apkName, "-apkpath", apkPath, "-keytool",jrePath + File.separator + "keytool"};
+				for (int i = 0; i < args.length; i++) {
+					System.out.println("\"" + args[i] + "\",");
 				}
 				pb = new ProcessBuilder(args);
 			} else {
-				String args[] = { jdkPath + File.separator + "java", "-jar",
+				String args[] = { jrePath + File.separator + "java", "-jar",
 						builderPath, "-project", targetProjectPath, "-sdk",
 						sdkPath, "-jdk", jdkPath, "-keyname", "testKey",
 						"-keypass", "123456", "-apkname", apkName, "-apkpath",
-						apkPath, "-install" };
-				for(int i=0;i<args.length;i++){
-					System.out.println(args[i]);
+						apkPath, "-install" , "-keytool",jrePath + File.separator + "keytool"};
+				for (int i = 0; i < args.length; i++) {
+					System.out.println("\"" + args[i] + "\",");
 				}
 				pb = new ProcessBuilder(args);
 			}

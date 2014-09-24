@@ -1,5 +1,6 @@
 package tool.panel.phonemesetting;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,6 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import tool.manager.MYKeyManager;
+import tool.tempUse.SequenceMainPanel;
 
 
 public class DisplayPhonemePanel extends JPanel {
@@ -26,15 +28,16 @@ public class DisplayPhonemePanel extends JPanel {
 		int height = (int) (tmpDi.getHeight()/6);
 		setPreferredSize(new Dimension(width, height));
 		
-		setLayout(new GridLayout(1,3));
+		setLayout(new BorderLayout());
 		
 		
 		phonemeLabel = new JLabel();
-		Font ft = new Font("?��?��고딕", Font.PLAIN, 30);
+		Font ft = new Font("Gothic", Font.PLAIN, 30);
 		phonemeLabel.setFont(ft);
 		phonemeLabel.setOpaque(true);
 		phonemeLabel.setBackground(Color.white);
 		phonemeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		phonemeLabel.setPreferredSize(new Dimension(120,300));
 		
 		TitledBorder topBorder = BorderFactory.createTitledBorder("Phoneme");
 		topBorder.setTitlePosition(TitledBorder.TOP);
@@ -44,9 +47,8 @@ public class DisplayPhonemePanel extends JPanel {
 		
 		MYKeyManager.getManager().setDisplayPhonemePanel(this);
 		
-		this.add(phonemeLabel);
-		this.add(new JLabel());				//Dummy1
-		this.add(new JLabel());				//Dummy2
+		this.add(phonemeLabel,"West");
+		this.add(new SequenceMainPanel(),"Center");
 		this.setOpaque(false);
 	}
 	

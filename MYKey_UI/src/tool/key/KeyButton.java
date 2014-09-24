@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
+import tool.frame.ErrorDialog;
 import tool.manager.MYKeyManager;
 import tool.panel.display.CompositionPanel;
 import tool.panel.keysetting.KeySettingMainPanel;
@@ -199,6 +200,10 @@ public class KeyButton extends JButton {
 			ki.increaseNum();
 			keyInfos.add(ki);
 			return true;
+		} else if (keyInfos.size() >= ki.getMaxKeyNum()) {
+			ErrorDialog.error("해당 음소는 최대 " + ki.getMaxKeyNum() + "개 추가 가능합니다.");
+		} else {
+			ErrorDialog.error("들어가 있는 음소 종류가 다릅니다. 다른 버튼을 선택해 주세요.");
 		}
 		return false;
 	}
@@ -325,16 +330,17 @@ public class KeyButton extends JButton {
 			ki.decreaseNum();
 		}
 
-		Vector<KeySequence> vec = MYKeyManager.getManager().getAllKeySequences();
+		Vector<KeySequence> vec = MYKeyManager.getManager()
+				.getAllKeySequences();
 		Vector<KeySequence> keySequences = new Vector<KeySequence>();
-		for(int i=0;i<vec.size();i++){
+		for (int i = 0; i < vec.size(); i++) {
 			KeySequence ks = vec.get(i);
 			if (ks.hasKeyButton(this)) {
 				keySequences.add(ks);
 			}
 		}
 		Iterator<KeySequence> ksIt = keySequences.iterator();
-		while(ksIt.hasNext()){
+		while (ksIt.hasNext()) {
 			ksIt.next().remove();
 		}
 		parent.removeKeyButtonWithOtherPanel(this);
@@ -347,17 +353,18 @@ public class KeyButton extends JButton {
 			KeyInfo ki = it.next();
 			ki.decreaseNum();
 		}
-		
-		Vector<KeySequence> vec = MYKeyManager.getManager().getAllKeySequences();
+
+		Vector<KeySequence> vec = MYKeyManager.getManager()
+				.getAllKeySequences();
 		Vector<KeySequence> keySequences = new Vector<KeySequence>();
-		for(int i=0;i<vec.size();i++){
+		for (int i = 0; i < vec.size(); i++) {
 			KeySequence ks = vec.get(i);
 			if (ks.hasKeyButton(this)) {
 				keySequences.add(ks);
 			}
 		}
 		Iterator<KeySequence> ksIt = keySequences.iterator();
-		while(ksIt.hasNext()){
+		while (ksIt.hasNext()) {
 			ksIt.next().remove();
 		}
 		parent.removeKeyButton(this);
@@ -415,8 +422,22 @@ public class KeyButton extends JButton {
 			g2d.setFont(f);
 			g2d.drawString(label, xString, yString);
 		} else if (img != null) {
-			g.drawImage(img, IMAGE_GAP * 2, IMAGE_GAP * 2, this.getWidth()
-					- IMAGE_GAP * 4, this.getHeight() - IMAGE_GAP * 4, this);
+			// rate = width / height;
+			double imageRate = (double)img.getWidth(this) / (double)img.getHeight(this);
+			double buttonRate = (double)this.getWidth() / (double)this.getHeight();
+			int height, width, x, y;
+			if(buttonRate > imageRate){
+				height = this.getHeight() - IMAGE_GAP*4;
+				width = (int)(this.getHeight()*imageRate) - IMAGE_GAP*4;
+				x = (this.getWidth() - width)/2;
+				y = IMAGE_GAP*2;
+			}else{
+				width = this.getWidth() - IMAGE_GAP*4;
+				height = (int)(this.getWidth()/imageRate) - IMAGE_GAP*4;
+				x = IMAGE_GAP*2;
+				y = (this.getHeight() - height)/2;
+			}
+			g.drawImage(img, x,y,width,height, this);
 		} else if (keyInfos.size() != 0) {
 			g.setColor(Color.white);
 			// g.drawString(label, (this.getWidth() / 2)-label.length(),
@@ -445,25 +466,25 @@ public class KeyButton extends JButton {
 			final int row = 4;
 			final int col = 5;
 			int num = vowelSequenceNums.get(i);
-			
-			int x = this.getWidth() * ((num - 1) % col) / col;
-			int y = this.getHeight()* ((num - 1) / col) / row;			
-			g.setColor(Color.YELLOW);
-			g.fillArc(x, y, this.getWidth() / col, this.getHeight() / row, 0, 360);
-			g.setColor(Color.BLACK);
-			Graphics2D g2d = (Graphics2D) g;			
 
-			Font f = new Font("Gothic", Font.BOLD,
-					this.getHeight() / 3);
+			int x = this.getWidth() * ((num - 1) % col) / col;
+			int y = this.getHeight() * ((num - 1) / col) / row;
+			g.setColor(Color.YELLOW);
+			g.fillArc(x, y, this.getWidth() / col, this.getHeight() / row, 0,
+					360);
+			g.setColor(Color.BLACK);
+			Graphics2D g2d = (Graphics2D) g;
+
+			Font f = new Font("Gothic", Font.BOLD, this.getHeight() / 3);
 			FontRenderContext context = g2d.getFontRenderContext();
 
 			TextLayout txt = new TextLayout(Integer.toString(num), f, context);
 			Rectangle2D bounds = txt.getBounds();
-			
-			int xString = (int) (x+(this.getWidth()/col - bounds.getWidth())/2);
-			int yString = (int) (y+(this.getHeight()/row - bounds.getHeight())/2);
-			
-			
+
+			int xString = (int) (x + (this.getWidth() / col - bounds.getWidth()) / 2);
+			int yString = (int) (y + (this.getHeight() / row - bounds
+					.getHeight()) / 2);
+
 			g2d.drawString(Integer.toString(num), xString, yString);
 		}
 	}
@@ -508,6 +529,11 @@ public class KeyButton extends JButton {
 					if (verticalResizing == DOWN) {
 						pressedY += (moveVerticalCell * oneCellHeight);
 					}
+					KeyButton otherBtn = btn.getParent()
+							.getOtherCompositionPanel()
+							.findKeyButtonFromMatrix(startRow, startCol);
+					otherBtn.saveMatrixAndLocation(tmpStartRow, tmpStartCol,
+							tmpRowCellNum, tmpColCellNum);
 					btn.saveMatrixAndLocation(tmpStartRow, tmpStartCol,
 							tmpRowCellNum, tmpColCellNum);
 				}

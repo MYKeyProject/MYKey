@@ -15,7 +15,7 @@ import tool.panel.display.DevicePanel;
 import tool.panel.display.ScreenPanel;
 import tool.panel.display.TabablePane;
 import tool.panel.keysetting.DesktopPane;
-import tool.tempUse.SequenceStart;
+import tool.tempUse.SequenceMainPanel;
 
 public class MFrame extends JFrame {
 	Container c;
@@ -75,7 +75,6 @@ public class MFrame extends JFrame {
 		this.add(lab, "South");
 		this.setSize(height * 13 / 10, height);
 		this.setVisible(true);
-new SequenceStart();
 		
 	}
 }

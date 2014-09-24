@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import tool.manager.MYKeyManager;
 
@@ -18,8 +19,8 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	public static final int VOWEL_KEY = 2;
 	public static Color colorNormal = Color.WHITE;
 	public static Color colorExist = Color.gray;
-	public static Color colorClicked = Color.CYAN;
-	public static Color colorEnter = Color.red;
+	public static Color colorClicked = Color.yellow;
+	public static Color colorEnter = Color.lightGray;
 	protected int keyState;
 	protected int phoneme;
 	protected int num = 0;
@@ -37,7 +38,10 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 		this.addMouseListener(this);
 		this.setVisible(true);
 		this.setOpaque(true);
-		this.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		
+		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+		Border lowerdbevel = BorderFactory.createLoweredBevelBorder();
+		this.setBorder(BorderFactory.createCompoundBorder(raisedbevel,lowerdbevel));
 		init();
 		MYKeyManager.getManager().addKeyInfo(this);
 	}

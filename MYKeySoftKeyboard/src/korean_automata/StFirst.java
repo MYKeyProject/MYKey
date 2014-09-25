@@ -2,6 +2,11 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Calculate alone phoneme.
+ * @author sunghoonpark
+ *
+ */
 public class StFirst extends CombinationState {
 	
 	public StFirst(){

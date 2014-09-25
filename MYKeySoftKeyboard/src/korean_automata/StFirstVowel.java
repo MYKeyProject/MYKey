@@ -2,6 +2,11 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Calculate letter for first phoneme and vowel.
+ * @author sunghoonpark
+ *
+ */
 public class StFirstVowel extends CombinationState {
 	
 	public StFirstVowel(){

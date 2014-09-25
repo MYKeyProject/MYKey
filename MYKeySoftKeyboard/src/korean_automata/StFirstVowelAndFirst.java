@@ -2,6 +2,12 @@ package korean_automata;
 
 import java.util.*;
 
+
+/**
+ * Calculate two letters, one of letters is first phoneme and vowel and the other is alone phoneme.
+ * @author sunghoonpark
+ *
+ */
 public class StFirstVowelAndFirst extends CombinationState {
 	
 	public StFirstVowelAndFirst(){

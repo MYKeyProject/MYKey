@@ -4,6 +4,15 @@ import java.util.*;
 
 import key_process.*;
 
+
+/**
+ * Super class of many State classes.
+ * This class is abstract class and each sub class extends this class.
+ * Many combine method coded in this class and each name of method is same.
+ * But it is made up overloading method, so all of method conduct different function.
+ * @author sunghoonpark
+ *
+ */
 public abstract class CombinationState {
 	protected boolean repeat;
 	protected int combPhon[];
@@ -15,6 +24,10 @@ public abstract class CombinationState {
 		return repeat;
 	}
 	
+	/**
+	 * Change last phoneme to first or first to last.
+	 * @param phoArr
+	 */
 	protected void changePhonemeCategory(ArrayList<Integer> phoArr){
 		if (phoArr.get(0) / 100 == 42) {
 			phoArr.set(0, PhonemeCategoryConverter.changePhonemeIdxFnToFr(phoArr.get(0)));
@@ -22,6 +35,11 @@ public abstract class CombinationState {
 	}
 	
 	
+	/**
+	 * Calculate single phoneme's or vowel's UNI code.
+	 * @param phoneme
+	 * @return
+	 */
 	protected int calcPhoneme(int phoneme){
 		int resultPhoneme = 0;
 		
@@ -44,6 +62,13 @@ public abstract class CombinationState {
 		return resultPhoneme;
 	}
 	
+	
+	/**
+	 * Calculate first + vowel letter's UNI code.
+	 * @param first
+	 * @param vowel
+	 * @return
+	 */
 	protected int calcPhoneme(int first, int vowel){
 		int resultPhoneme = 0;
 		
@@ -52,6 +77,14 @@ public abstract class CombinationState {
 		return resultPhoneme;
 	}
 	
+	
+	/**
+	 * Calculate first + vowel + final letter's UNI code.
+	 * @param first
+	 * @param vowel
+	 * @param finalPhoneme
+	 * @return
+	 */
 	protected int calcPhoneme(int first, int vowel, int finalPhoneme){
 		int resultPhoneme = 0;
 		
@@ -60,6 +93,15 @@ public abstract class CombinationState {
 		return resultPhoneme;
 	}
 	
+	
+	/**
+	 * Calculate MultiFinalState letter's UNI code(first + vowel + (firts_final + last_final)
+	 * @param first
+	 * @param vowel
+	 * @param firFinal
+	 * @param secFinal
+	 * @return
+	 */
 	protected int calcPhoneme(int first, int vowel, int firFinal, int secFinal){
 		int resultPhoneme = 0;
 		int resultFinal = 0;

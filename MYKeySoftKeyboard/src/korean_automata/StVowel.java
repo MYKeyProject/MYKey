@@ -2,6 +2,11 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Calculate alone vowel.
+ * @author sunghoonpark
+ *
+ */
 public class StVowel extends CombinationState {
 	
 	public StVowel(){

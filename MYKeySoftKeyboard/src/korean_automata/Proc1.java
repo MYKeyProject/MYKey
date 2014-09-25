@@ -4,6 +4,12 @@ import java.util.*;
 
 import key_process.*;
 
+/**
+ * Handling finish state and transition for new state from ST_FIRST_VOWEL to ST_FIRST
+ * Calculate one letter by first phoneme with vowel and print it to device.
+ * Also print one letter by first phoneme.
+ * @author sunghoonpark
+ */
 public class Proc1 extends CombinationState {
 	
 	public Proc1(){

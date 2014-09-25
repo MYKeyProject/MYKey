@@ -5,8 +5,6 @@ import java.util.*;
 import key_process.*;
 
 
-//TODO: Redesign module structure of MYKey's Automata modules.
-
 /**
  * This class is typical class file of Korean Automata Module.
  * It's only conduct Korean combination.
@@ -51,7 +49,10 @@ public class KoreanAutomata {
 	private int phonemeInt[];									//TODO: Repeat discussion. Is it really need??
 	
 	
-	
+	/**
+	 * Create Korean Automata instance and initiate.
+	 * @param buffer
+	 */
 	public KoreanAutomata(Buffer buffer) {
 		this.buffer = buffer;
 		
@@ -70,6 +71,10 @@ public class KoreanAutomata {
 	}
 	
 	
+	/**
+	 * Create Korean Automata's states.
+	 * This sequence of creating states is very important and have to follow.
+	 */
 	private void createState() {
 		stateArr.add(new StEmpty()); 				
 		stateArr.add(new StFirst());			    
@@ -86,6 +91,10 @@ public class KoreanAutomata {
 	}
 	
 	
+	/**
+	 * Create what table of Korean Automata is use.
+	 * Korean Automata use table driven method.  
+	 */
 	private void createCombinationTable() {
 		
 		for(int i = 0; i < stTrTable.length; i++){
@@ -115,6 +124,12 @@ public class KoreanAutomata {
 		stTrTable[ST_SINGLE_FINAL_AND_FIRST][VOWEL] = PROC2;
 	}
 	
+	
+	/**
+	 * Most important method of Korean Automata.
+	 * This method conduct combining korean letters.
+	 * @param isRenew
+	 */
 	public void startCombine(boolean isRenew) {
 		ArrayList<Integer> tmpBuffer = buffer.getPhoBuffer();
 		
@@ -139,6 +154,13 @@ public class KoreanAutomata {
 		buffer.appendLetter(phonemeInt);
 	}
 	
+	
+	/**
+	 * Verify input method for combination
+	 * Each letters divided by number and categorize to each kind of letter.
+	 * @param phoneme
+	 * @return
+	 */
 	private int verifyPhonemeCategory(int phoneme) {
 		int tmp = phoneme / 100;
 
@@ -152,6 +174,8 @@ public class KoreanAutomata {
 			return UNKNOWN;
 	}
 	
+	
+	//Getter and Setter
 	public int getPreviousState(){
 		return previousState;
 	}
@@ -176,13 +200,18 @@ public class KoreanAutomata {
 		this.isFinalInput = isFinalInput;
 	}
 	
-	public void initPhonemeInt() {
-		for (int i = 0; i < phonemeInt.length; i++)
-			phonemeInt[i] = 0;
-	}
+	
 
 	public Buffer getBuffer() {
 		return buffer;
+	}
+	
+	
+	
+	//Initializer
+	public void initPhonemeInt() {
+		for (int i = 0; i < phonemeInt.length; i++)
+			phonemeInt[i] = 0;
 	}
 
 	public void initKoreaAutomataState() {

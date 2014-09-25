@@ -3,6 +3,11 @@ package korean_automata;
 import java.util.*;
 
 
+/**
+ * Calculate letter for first phoneme, vowel and final phoneme.
+ * @author sunghoonpark
+ *
+ */
 public class StSingleFinal extends CombinationState {
 	
 	public StSingleFinal(){

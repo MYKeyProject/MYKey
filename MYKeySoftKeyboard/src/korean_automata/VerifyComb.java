@@ -4,6 +4,12 @@ import java.util.*;
 
 import key_process.*;
 
+/**
+ * Verify that possibility of combine by first_final phoneme and second_final phoneme.
+ * If is it possible, state will be ST_MULTI_FINAL, if not, state will be ST_SINGLE_FINAL_AND_FIRST.
+ * @author sunghoonpark
+ *
+ */
 public class VerifyComb extends CombinationState {
 	
 	public VerifyComb(){

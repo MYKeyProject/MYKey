@@ -2,6 +2,12 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Initial state of Korean Automata.
+ * Nothing to do.
+ * @author sunghoonpark
+ *
+ */
 public class StEmpty extends CombinationState {
 	
 	public StEmpty(){

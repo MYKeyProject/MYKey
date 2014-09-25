@@ -2,6 +2,13 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Error state of Korean Automata.
+ * If inputed wrong letter for transition, state always shit to error state.
+ * And follow some routines.
+ * @author sunghoonpark
+ *
+ */
 public class StError extends CombinationState {
 	
 	public StError(){

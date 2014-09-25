@@ -1,6 +1,19 @@
 package korean_automata;
 
+
+/**
+ * This class has static method to change letter's category.
+ * Never generate PhonemeCategoryConverter class, just call static method.
+ * @author sunghoonpark
+ *
+ */
 public class PhonemeCategoryConverter {
+	
+	/**
+	 * Change letter's category first phoneme to final phoneme.
+	 * @param phonemeIdx
+	 * @return
+	 */
 	public static int changePhonemeIdxFrToFn(int phonemeIdx) {
 		int finalPhoneme = phonemeIdx;
 
@@ -93,7 +106,7 @@ public class PhonemeCategoryConverter {
 	
 
 	/**
-	 * 종성의 Idx를 초성의 Idx로 변환
+	 * Change letter's category final phoneme to first phoneme.
 	 * @param phonemeIdx
 	 * @return
 	 */
@@ -188,7 +201,7 @@ public class PhonemeCategoryConverter {
 
 
 	/**
-	 * 초성이나 종성의 Idx를 독립자음 Idx로 변환
+	 * Change letter's category first phoneme or final phoneme to alone phoneme.
 	 * @param phonemeIdx
 	 * @return
 	 */

@@ -2,6 +2,11 @@ package korean_automata;
 
 import java.util.*;
 
+/**
+ * Calculate letter for first phoneme, vowel, first_final phoneme and second_final phoneme.
+ * @author sunghoonpark
+ *
+ */
 public class StMultiFinal extends CombinationState {
 	
 	public StMultiFinal(){

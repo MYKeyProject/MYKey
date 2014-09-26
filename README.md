@@ -1,4 +1,0 @@
-MYKey
-=====
-
-MYKey Project!

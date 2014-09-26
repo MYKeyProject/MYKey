@@ -84,7 +84,7 @@ public class JAVAGenerator {
 			String stringLabel = tmpStr[1];
 			makeStringKeyList(stringCode, stringLabel);
 		}
-		// make java file method
+		makeJava();
 	}
 
 	public void makeStringKeyList(String stringKeyCode, String stringKeyLabel) {

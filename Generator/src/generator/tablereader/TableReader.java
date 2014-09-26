@@ -131,7 +131,6 @@ public class TableReader {
 				// Layout information write
 				if (isLayoutInfo) {
 					numOfKey++; // The number of key counting.
-					
 					String[] tmpStr = readLine.split("\t");
 					currentYPos = Integer.parseInt(tmpStr[4]);
 					
@@ -146,7 +145,7 @@ public class TableReader {
 								+ "\t" + numOfRow + "\n");
 					} else if (numOfXML == 2) { // another (second)
 						secondLayoutInfo = secondLayoutInfo
-								.concat(readLine = "\t" + numOfRow + "\n");
+								.concat(readLine + "\t" + numOfRow + "\n");
 					}
 				}
 				
@@ -159,11 +158,10 @@ public class TableReader {
 				if(isStringKeyInfo) {
 					stringKeyInfo = stringKeyInfo.concat(readLine+"\n");
 				}
-				
-				new XMLGenerator(numOfKey, numOfRow, maxRow, maxCol, verticalRate,
-						xmlPath).readKeyArray(firstLayoutInfo, secondLayoutInfo);
-				new JAVAGenerator(javaPath).readPhonemeTable(keyInfo, stringKeyInfo);
 			}
+			new XMLGenerator(numOfKey, numOfRow, maxRow, maxCol, verticalRate,
+					xmlPath).readKeyArray(firstLayoutInfo, secondLayoutInfo);
+			new JAVAGenerator(javaPath).readPhonemeTable(keyInfo, stringKeyInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

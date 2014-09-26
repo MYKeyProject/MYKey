@@ -51,7 +51,7 @@ public class KeySettingPanel extends JPanel {
 		radioButtonGroup = new ButtonGroup();
 		textInputPanelSetting();
 		imageInputPanelSetting();
-		optionPanelSetting();
+		optionPanelSetting(keyButton.isRepeatable());
 		if (isTextKey) {
 			textShowTextField.setText(keyButton.getLabelName());
 			textRadioButton.setSelected(true);
@@ -110,14 +110,15 @@ public class KeySettingPanel extends JPanel {
 		imageInputPanel.add(imagePathButton, "East");
 	}
 
-	public void optionPanelSetting() {
+	public void optionPanelSetting(boolean isRepeatable) {
+		setRepeatable(isRepeatable);
 		optionPanel = new JPanel();
 		optionPanel.setLayout(new BorderLayout());
 		optionPanel.setBorder(new TitledBorder("선택 3"));
 		optionPanel.setOpaque(false);
 		this.add(optionPanel);
 
-		repeatCheckBox = new JCheckBox("꾸욱 누르면 연속 입력");
+		repeatCheckBox = new JCheckBox("꾸욱 누르면 연속 입력",isRepeatable);
 		repeatCheckBox.setOpaque(false);
 		repeatCheckBox.addItemListener(new RepeatButtonListener());
 		optionPanel.add(repeatCheckBox);

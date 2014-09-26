@@ -1,13 +1,17 @@
 package tool.manager;
 
+import generator.tablereader.TableReader;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,6 +20,7 @@ import java.util.Vector;
 
 import tool.file.FileHandler;
 import tool.file.ProcessControlThread;
+import tool.frame.ErrorDialog;
 import tool.frame.MFrame;
 import tool.key.KeyButton;
 import tool.key.KeyInfo;
@@ -45,7 +50,7 @@ public class MYKeyManager {
 	private static CompositionPanel originalCompositionPanel,
 			shiftCompositionPanel;
 	private DisplayPhonemePanel displayPhonemePanel;
-	private int consonant, vowel;
+	private int consonant, vowel, stringKeyCode;
 	private String loadFilePath = null;
 	private String currentDirectoryPath = Paths.get("").toAbsolutePath()
 			.toString();
@@ -196,6 +201,11 @@ public class MYKeyManager {
 	}
 
 	public void setKeySeqnence(KeySequence ks) {
+		if(keySequence != null){
+			for (int i = 0; i < keySequence.getKeyButtons().size(); i++) {
+				keySequence.getKeyButtons().get(i).removeSequenceNums();
+			}
+		}
 		keySequence = ks;
 	}
 
@@ -253,7 +263,40 @@ public class MYKeyManager {
 		for (int i = 0; i < allKeyInfos.size(); i++) {
 			KeyInfo ki = allKeyInfos.get(i);
 			if ((ki.isPrimary()) && (ki.getNum() <= 0)) {
+				ErrorDialog.error("Special, 자음, 모음키는 모든 키가 존재해야 합니다.");
 				return false;
+			}
+		}
+		for(int i=0;i<allKeySequences.size();i++){
+			KeySequence tempKS = new KeySequence(null);
+			KeySequence ks = allKeySequences.get(i);
+			KeyButton btn = ks.getKeyButtons().get(0);
+			int j=0;
+			for(;j<ks.getKeyButtons().size();j++){
+				tempKS.appendKeyButtons(ks.getKeyButtons().get(j));
+				if(ks.getKeyButtons().get(j) == btn){
+					continue;
+				}else{
+					break;
+				}
+			}
+			if(btn.getKeyInfos().size() < j){ // 키 조합 전 한 버튼을 입력하였을 때의 입력이 없다.
+				ErrorDialog.error("조합된 음소 중에 출력이 불가능한 키가 있습니다.");
+				return false;
+			}
+			for(;j<ks.getKeyButtons().size()-1;j++){
+				boolean exist = false;
+				for(int k=0;k<allKeySequences.size();k++){
+					if(tempKS.equals(allKeySequences.get(k))){
+						exist = true;
+						break;
+					}
+				}
+				if(!exist){
+					ErrorDialog.error("조합된 음소 중에 출력이 불가능한 키가 있습니다.");
+					return false;
+				}
+				tempKS.appendKeyButtons(ks.getKeyButtons().get(j+1));
 			}
 		}
 		return true;
@@ -322,22 +365,23 @@ public class MYKeyManager {
 		String javaPath = projectPath + File.separator + "src" + File.separator
 				+ "com" + File.separator + "example" + File.separator
 				+ "android" + File.separator + "softkeyboard";
-//		new TableReader(tablePath, xmlPath, javaPath);
-// have to remove comment after merge with generator
+		new TableReader(tablePath, xmlPath, javaPath);
 	}
 
 	public String saveTables(String path) {
 		if (path == null) {
 			return null;
 		}
+		if(!FileHandler.findExtensionName(path).equals("myk")){
+			path+=".myk";
+		}
 		copyAllKeyButtonImageToMYKey();
-		FileWriter fw;
 		BufferedWriter bw;
 		try {
-			fw = new FileWriter(path);
-			bw = new BufferedWriter(fw);
+			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
 			consonant = 3000;
 			vowel = 3500;
+			stringKeyCode = 4400;
 			makeKeyTable(allKeyButtons, bw);
 			makeKeyTable(allShiftKeyButtons, bw);
 			makePhonemeTable(allKeyInfos, bw);
@@ -381,6 +425,9 @@ public class MYKeyManager {
 				switch (btn.getKeyStatus()) {
 				case KeyInfo.SPECIAL_KEY:
 					keyCode = btn.getSpecialPhoneme();
+					if(keyCode == 4400){
+						keyCode = stringKeyCode++;
+					}
 					break;
 				case KeyInfo.VOWEL_KEY:
 					keyCode = vowel++;
@@ -427,7 +474,7 @@ public class MYKeyManager {
 				if (prevYPos != yPos) {
 					keyEdgeFlags = LEFT_EDGE_FLAG;
 				} else if ((i == (vec.size() - 1))
-						|| (vec.get(i + 1).getY() != btn.getY())) {
+						|| (vec.get(i + 1).getStartRow() != btn.getStartRow())) {
 					keyEdgeFlags = RIGHT_EDGE_FLAG;
 				}
 				prevYPos = yPos;
@@ -479,6 +526,21 @@ public class MYKeyManager {
 				}
 				bw.newLine();
 			}
+			bw.write("StringKey");
+			bw.newLine();
+			
+			Vector<KeyLocation> keyLocations = findKeyInfoLocation(findKeyInfoFromLabel("String"));
+			for(int i=0;i<keyLocations.size();i++){
+				KeyButton btn = keyLocations.get(i).getKeyButton();
+				int keyCode = btn.getKeyCode();
+				String label = btn.getLabelName();
+				if(label == null){
+					label = "String";
+				}
+				bw.write(keyCode + "\t" + label);
+				bw.newLine();
+			}
+			
 		} catch (Exception e) {
 
 		}
@@ -504,6 +566,7 @@ public class MYKeyManager {
 					+ originalCompositionPanel.getWidth() + " , "
 					+ originalCompositionPanel.getHeight());
 			while ((str = br.readLine()) != null) {
+				boolean isRepeatable = false;
 				if (str.equals("LayoutTable")) {
 					panel = shiftCompositionPanel;
 				} else if (str.equals("PhonemeTable")) {
@@ -528,10 +591,16 @@ public class MYKeyManager {
 				}else{
 					imagePath = getImagePathOfMYKey(imagePath);
 				}
+				if(split[8].equals("1")){
+					isRepeatable = true;
+				}
 				KeyButton btn = panel.loadKeyButton(startRow, startCol,
-						rowCellNum, colCellNum, keyCode, text, imagePath);
+						rowCellNum, colCellNum, keyCode, text, imagePath, isRepeatable);
 				if (keyCode < KOREAN_PHONEME_MIN_IDX
 						|| keyCode > KOREAN_PHONEME_MAX_IDX) {
+					if(keyCode >= 4400){
+						keyCode = 4400;
+					}
 					KeyInfo ki = findKeyInfoFromPhoneme(keyCode);
 					if (ki != null) {
 						btn.addKeyInfo(ki);
@@ -541,6 +610,9 @@ public class MYKeyManager {
 
 			while ((str = br.readLine()) != null) {
 				String[] split = str.split("\t");
+				if(str.equals("StringKey")){
+					break;
+				}
 				if (split.length <= 1) {
 					continue;
 				}
@@ -577,6 +649,9 @@ public class MYKeyManager {
 			}
 			for (int i = 0; i < allKeyButtons.size(); i++) {
 				allKeyButtons.get(i).updateSavedKeyInfo();
+			}
+			for(int i=0;i<allShiftKeyButtons.size();i++){
+				allShiftKeyButtons.get(i).updateSavedKeyInfo();
 			}
 		} catch (Exception e) {
 			// /////////////////////////////////////////////////////////////////////////////error
@@ -715,7 +790,7 @@ public class MYKeyManager {
 				// File copy to SoftKeyboard Project
 				FileHandler.copyFile(btn.getImagePath(), targetProjectPath
 						+ File.separator + "res" + File.separator
-						+ "drawable-hpdi" + File.separator + f.getName());
+						+ "drawable-hdpi" + File.separator + f.getName());
 			}
 		}
 	}
@@ -761,10 +836,12 @@ public class MYKeyManager {
 		if (apkPath == null || tablePath == null) {
 			return;
 		}
+		if(!checkPossibleToFinishComposing()){
+			return;
+		}
 		copyBaseProject(baseProjectPath, targetProjectPath);
 		copyAllKeyButtonImageToProject();
 		generateXmlAndJava(loadFilePath, targetProjectPath);
-
 		try {
 			ProcessBuilder pb;
 			if (!install) {

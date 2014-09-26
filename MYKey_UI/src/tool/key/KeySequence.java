@@ -21,6 +21,8 @@ public class KeySequence extends JPanel implements MouseListener,
 	private KeyInfo parent;
 	private Vector<KeyButton> keyButtons = new Vector<KeyButton>();
 	private boolean isRemovable = false;
+	private static Color normalColor = Color.red;
+	private static Color overColor = Color.yellow;
 	private static Image removeImg = new ImageIcon(Paths.get("")
 			.toAbsolutePath().toString()
 			+ File.separator
@@ -31,7 +33,7 @@ public class KeySequence extends JPanel implements MouseListener,
 			+ "remove.jpg").getImage();
 
 	public KeySequence(KeyInfo parent) {
-		this.setBackground(Color.red);
+		this.setBackground(normalColor);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.parent = parent;
@@ -45,13 +47,20 @@ public class KeySequence extends JPanel implements MouseListener,
 	 * @param KeyButton
 	 */
 	public void appendKeyButtons(KeyButton btn) {
-		if (btn.getKeyStatus() == KeyInfo.EMPTY_KEY) {
+		if (parent == null) { // 임시 키조합일 경우
+			keyButtons.add(btn);
+		} else if (btn.getKeyStatus() == KeyInfo.EMPTY_KEY) {
 			keyButtons.add(btn);
 		} else if (parent.getKeyStatus() == btn.getKeyStatus()) {
 			keyButtons.add(btn);
 		} else {
 			ErrorDialog.error("들어가 있는 음소 종류가 다릅니다. 다른 버튼을 선택해 주세요.");
+			return;
 			// error.............
+		}
+		if (MYKeyManager.getManager().getKeySequence() != null
+				&& this == MYKeyManager.getManager().getKeySequence()) {
+			keyButtons.get(keyButtons.size()-1).addSequenceNum(keyButtons.size());
 		}
 	}
 
@@ -84,7 +93,8 @@ public class KeySequence extends JPanel implements MouseListener,
 					&& button.getKeyStatus() != KeyInfo.EMPTY_KEY) {
 				status = button.getKeyStatus();
 			} else if (status != KeyInfo.EMPTY_KEY
-					&& button.getKeyStatus() != status && button.getKeyStatus() != KeyInfo.EMPTY_KEY) {
+					&& button.getKeyStatus() != status
+					&& button.getKeyStatus() != KeyInfo.EMPTY_KEY) {
 				ErrorDialog.error("들어가 있는 음소 종류가 다릅니다. 다른 버튼을 선택해 주세요.");
 				return false;
 			}
@@ -105,6 +115,9 @@ public class KeySequence extends JPanel implements MouseListener,
 	}
 
 	public void update() {
+		for (int i = 0; i < keyButtons.size(); i++) {
+			keyButtons.get(i).removeSequenceNums();
+		}
 		if (!checkPossibleToAdd()) {
 			// error cannot update KeySuequence..... and init keysequence
 			return;
@@ -150,10 +163,8 @@ public class KeySequence extends JPanel implements MouseListener,
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		if (isRemovable) {
-			g.drawImage(removeImg, this.getWidth() * 9 / 10, 0,
-					this.getWidth() / 10, this.getHeight() / 10, this);
-		}
+		g.drawImage(removeImg, this.getWidth() * 3 / 5, 0,
+				this.getWidth() * 2 / 5, this.getHeight() / 5, this);
 	}
 
 	@Override
@@ -167,6 +178,8 @@ public class KeySequence extends JPanel implements MouseListener,
 		for (int i = 0; i < keyButtons.size(); i++) {
 			keyButtons.get(i).addSequenceNum(i + 1);
 		}
+		this.setBackground(overColor);
+
 	}
 
 	@Override
@@ -174,6 +187,7 @@ public class KeySequence extends JPanel implements MouseListener,
 		for (int i = 0; i < keyButtons.size(); i++) {
 			keyButtons.get(i).removeSequenceNums();
 		}
+		this.setBackground(normalColor);
 	}
 
 	@Override
@@ -195,8 +209,8 @@ public class KeySequence extends JPanel implements MouseListener,
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		KeySequence parent = (KeySequence) e.getSource();
-		if (e.getX() >= parent.getWidth() * 9 / 10
-				&& e.getY() <= parent.getHeight() / 10) {
+		if (e.getX() >= parent.getWidth() * 3 / 5
+				&& e.getY() <= parent.getHeight() / 5) {
 			isRemovable = true;
 		} else {
 			isRemovable = false;
@@ -207,8 +221,8 @@ public class KeySequence extends JPanel implements MouseListener,
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		KeySequence parent = (KeySequence) e.getSource();
-		if (e.getX() >= parent.getWidth() * 9 / 10
-				&& e.getY() <= parent.getHeight() / 10) {
+		if (e.getX() >= parent.getWidth() * 3 / 5
+				&& e.getY() <= parent.getHeight() / 5) {
 			isRemovable = true;
 		} else {
 			isRemovable = false;

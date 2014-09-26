@@ -113,13 +113,14 @@ public class CompositionPanel extends JPanel implements MouseListener,
 	}
 
 	public KeyButton loadKeyButton(int startRow, int startCol, int rowCellNum,
-			int colCellNum, int keyCode, String text, String imagePath) {
+			int colCellNum, int keyCode, String text, String imagePath, boolean isRepeatable) {
 		KeyButton kb = new KeyButton(startRow, startCol, rowCellNum,
 				colCellNum, this, true);
 		kb.setKeyCode(keyCode);
 		kb.setLabelName(text);
 		kb.setTextKey();
 		kb.setImagePath(imagePath);
+		kb.setRepeatable(isRepeatable);
 		if (imagePath != null) {
 			File f = new File(imagePath);
 			if (f.exists()) {

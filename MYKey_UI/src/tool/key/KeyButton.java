@@ -475,17 +475,10 @@ public class KeyButton extends JButton {
 			g.setColor(Color.BLACK);
 			Graphics2D g2d = (Graphics2D) g;
 
-			Font f = new Font("Gothic", Font.BOLD, this.getHeight() / 3);
-			FontRenderContext context = g2d.getFontRenderContext();
+			Font f = new Font("Gothic", Font.BOLD, this.getHeight() / 4);
+			g2d.setFont(f);
 
-			TextLayout txt = new TextLayout(Integer.toString(num), f, context);
-			Rectangle2D bounds = txt.getBounds();
-
-			int xString = (int) (x + (this.getWidth() / col - bounds.getWidth()) / 2);
-			int yString = (int) (y + (this.getHeight() / row - bounds
-					.getHeight()) / 2);
-
-			g2d.drawString(Integer.toString(num), xString, yString);
+			g2d.drawString(Integer.toString(num), x+this.getWidth()/20, y+this.getHeight()/5);
 		}
 	}
 

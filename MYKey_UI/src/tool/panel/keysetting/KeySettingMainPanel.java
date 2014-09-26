@@ -32,6 +32,7 @@ public class KeySettingMainPanel extends JPanel {
 		this.setVisible(true);
 	}
 	public void exit(){
+		DesktopPane.setKeySettingMainPanel(null);
 		parent.dispose();
 	}
 	public void setParent(JInternalFrame parent){
@@ -81,7 +82,6 @@ public class KeySettingMainPanel extends JPanel {
 			}
 			keyButton.setKeyInfoSequence(phonemeSettingPanel.getPhonemeLabels());
 			keyButton.repaint();
-			DesktopPane.setKeySettingMainPanel(null);
 			exit();
 		}
 		

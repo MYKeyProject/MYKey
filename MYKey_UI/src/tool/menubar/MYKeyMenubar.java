@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tool.frame.SettingFrame;
+import tool.helper.MainHelpFrame;
 import tool.manager.MYKeyManager;
 
 public class MYKeyMenubar extends JMenuBar implements ActionListener {
@@ -23,7 +24,6 @@ public class MYKeyMenubar extends JMenuBar implements ActionListener {
 
 	JMenu apk;
 	JMenuItem make;
-	JMenuItem install;
 
 	JMenu option;
 	JMenuItem setting;
@@ -45,8 +45,6 @@ public class MYKeyMenubar extends JMenuBar implements ActionListener {
 		apk = new JMenu("Apk");
 		make = new JMenuItem("make");
 		make.addActionListener(this);
-		install = new JMenuItem("install");
-		install.addActionListener(this);
 
 		option = new JMenu("Option");
 		setting = new JMenuItem("setting");
@@ -63,7 +61,6 @@ public class MYKeyMenubar extends JMenuBar implements ActionListener {
 		this.add(file);
 
 		apk.add(make);
-		apk.add(install);
 		this.add(apk);
 
 		option.add(setting);
@@ -184,11 +181,10 @@ public class MYKeyMenubar extends JMenuBar implements ActionListener {
 				}
 				return;
 			}
-		} else if (e.getSource() == install) {
-
 		} else if (e.getSource() == setting) {
 			new SettingFrame();
 		} else if (e.getSource() == helpItem) {
+			new MainHelpFrame();
 
 		}
 	}

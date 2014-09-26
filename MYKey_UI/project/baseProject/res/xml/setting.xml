@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:key="setting_title"
+    android:title="@string/setting_title">
+    
+    <PreferenceCategory android:title="키 입력시 효과" >
+        
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="Vibration"
+            android:summaryOff="키 입력시 진동이 울리지 않습니다."
+            android:summaryOn="키 입력시 진동이 울립니다."
+            android:title="터치 시 진동" >
+        </CheckBoxPreference>
+        
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="Sound"
+            android:summaryOff="키 입력시 소리가 울리지 않습니다."
+            android:summaryOn="키 입력시 소리가 울립니다."
+            android:title="터치 시 소리" >
+        </CheckBoxPreference>
+        
+    </PreferenceCategory>
+    
+    
+    <PreferenceCategory android:title="문자열 키 내용 변경" >
+        
+        <Preference
+            android:defaultValue="A"
+            android:key="String_Key"
+            android:summary="문자열 키의 내용을 변경합니다."
+            android:title="문자열 키" />
+        
+    </PreferenceCategory>
+    
+</PreferenceScreen>

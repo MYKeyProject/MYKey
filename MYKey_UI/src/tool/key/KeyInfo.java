@@ -12,6 +12,29 @@ import javax.swing.border.Border;
 
 import tool.manager.MYKeyManager;
 
+/* 
+ * Copyright (C) 2008-2009 The Android Open Source Project 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
+ */
+
+/**
+ * 
+ * @author Bae Jinshik
+ * 
+ *         KeyInfo help to know what Consonant it is
+ * 
+ */
 public abstract class KeyInfo extends JPanel implements MouseListener {
 	public static final int EMPTY_KEY = -4;
 	public static final int SPECIAL_KEY = 0;
@@ -38,10 +61,11 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 		this.addMouseListener(this);
 		this.setVisible(true);
 		this.setOpaque(true);
-		
+
 		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
 		Border lowerdbevel = BorderFactory.createLoweredBevelBorder();
-		this.setBorder(BorderFactory.createCompoundBorder(raisedbevel,lowerdbevel));
+		this.setBorder(BorderFactory.createCompoundBorder(raisedbevel,
+				lowerdbevel));
 		init();
 		MYKeyManager.getManager().addKeyInfo(this);
 	}
@@ -52,7 +76,7 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	}
 
 	public synchronized void decreaseNum() {
-		if(num != 0){
+		if (num != 0) {
 			num--;
 			this.repaint();
 		}
@@ -61,8 +85,9 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	public int getNum() {
 		return num;
 	}
+
 	public abstract int getMaxKeyNum();
-	
+
 	public void init() {
 		System.out.println("init");
 		isClicked = false;
@@ -70,12 +95,13 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 		this.setBackground(colorNormal);
 		this.num = 0;
 	}
-	
-	public synchronized void addKeySequence(KeySequence ks){
+
+	public synchronized void addKeySequence(KeySequence ks) {
 		keySequences.add(ks);
 		increaseNum();
 	}
-	public synchronized void removeKeySequence(KeySequence ks){
+
+	public synchronized void removeKeySequence(KeySequence ks) {
 		keySequences.remove(ks);
 		decreaseNum();
 	}
@@ -86,13 +112,13 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	}
 
 	public void mouseEnter() {
-		if(getNum() > 0){
+		if (getNum() > 0) {
 			MYKeyManager.getManager().showContainedButton(this);
 		}
-		if(MYKeyManager.getManager().getPressedKeyInfo() == null){
+		if (MYKeyManager.getManager().getPressedKeyInfo() == null) {
 			MYKeyManager.getManager().setSequenceKeyInfo(this);
 		}
-		System.out.println("keySequence Size : "  +  keySequences.size());
+		System.out.println("keySequence Size : " + keySequences.size());
 		isEntered = true;
 		repaint();
 	}
@@ -102,7 +128,7 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 		if (isClicked) {
 			MYKeyManager.getManager().setPressedKeyInfo(this);
 			MYKeyManager.getManager().setSequenceKeyInfo(this);
-		}else{
+		} else {
 			MYKeyManager.getManager().setPressedKeyInfo(null);
 			MYKeyManager.getManager().setSequenceKeyInfo(null);
 		}
@@ -110,16 +136,15 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	}
 
 	public void mouseExit() {
-		if(getNum() > 0){
+		if (getNum() > 0) {
 			MYKeyManager.getManager().finishShowingContainedButton(this);
 		}
-		if(MYKeyManager.getManager().getPressedKeyInfo() == null){
+		if (MYKeyManager.getManager().getPressedKeyInfo() == null) {
 			MYKeyManager.getManager().setSequenceKeyInfo(null);
 		}
 		isEntered = false;
 		repaint();
 	}
-
 
 	public int getphoneme() {
 		return phoneme;
@@ -136,8 +161,8 @@ public abstract class KeyInfo extends JPanel implements MouseListener {
 	public String getLabel() {
 		return keyLabel;
 	}
-	
-	public Vector<KeySequence> getKeySequences(){
+
+	public Vector<KeySequence> getKeySequences() {
 		return keySequences;
 	}
 

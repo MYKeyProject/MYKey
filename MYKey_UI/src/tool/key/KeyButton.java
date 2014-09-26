@@ -28,6 +28,31 @@ import tool.manager.MYKeyManager;
 import tool.panel.display.CompositionPanel;
 import tool.panel.keysetting.KeySettingMainPanel;
 
+/* 
+ * Copyright (C) 2008-2009 The Android Open Source Project 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
+ */
+
+/**
+ * 
+ * @author Bae Jinshik
+ * 
+ *         KeyButton is Button that user will be click in own device
+ * 
+ * 
+ */
+
 public class KeyButton extends JButton {
 	private static final int NOTHING = 0;
 	private static final int RESIZING = 1;
@@ -39,10 +64,11 @@ public class KeyButton extends JButton {
 	private static final int MAX_SIZE = 5;
 
 	private static final int RESIZE_GAP = 2;
-	private int keyCode;
-	private int mouseStatus = NOTHING;
-	private int keySequenceNum = 0;
-	private int keyStatus = KeyInfo.EMPTY_KEY;
+	private int keyCode; // key's identification
+	private int mouseStatus = NOTHING; // status that means mouse's location (
+										// on or not )
+	private int keySequenceNum = 0; // num of KeySequences that KeyButton has
+	private int keyStatus = KeyInfo.EMPTY_KEY; // status that Keybutton is using
 	private int horizontalResizing, verticalResizing;
 	private boolean isRepeatable = false;
 	private boolean isTextButton = true;
@@ -52,13 +78,28 @@ public class KeyButton extends JButton {
 	private Image img;
 
 	private int pressedX, pressedY;
-	private Vector<KeyInfo> keyInfos = new Vector<KeyInfo>();
-	private Vector<SavedKeyInfo> savedKeyInfos = new Vector<SavedKeyInfo>();
+	private Vector<KeyInfo> keyInfos = new Vector<KeyInfo>(); // KeyInfos that
+																// KeyButton has
+	private Vector<SavedKeyInfo> savedKeyInfos = new Vector<SavedKeyInfo>(); // KeyInfos
+																				// which
+																				// use
+																				// temporarily
+																				// when
+																				// load
+																				// a
+																				// work
 	private Vector<Integer> vowelSequenceNums = new Vector<Integer>();
-	private CompositionPanel parent;
-	private KeyButton copyBtn;
-	private int tmpRow, tmpCol, tmpRowCellNum, tmpColCellNum;
-	private int startRow, startCol, rowCellNum, colCellNum;
+	private CompositionPanel parent; // Parent panel
+	private KeyButton copyBtn; // shift or not shiftted Panel's keybutton which
+								// is in same location
+	private int tmpRow, tmpCol, tmpRowCellNum, tmpColCellNum; // size and
+																// loaction of
+																// keybutton
+																// when
+																// keybutton is
+																// changing
+	private int startRow, startCol, rowCellNum, colCellNum; // size and location
+															// of keybutton
 	private static Image keyImg = new ImageIcon(Paths.get("").toAbsolutePath()
 			.toString()
 			+ File.separator
@@ -93,6 +134,9 @@ public class KeyButton extends JButton {
 		// }
 	}
 
+	/**
+	 * increaseKeySequenceNum ( plus one )
+	 */
 	public synchronized void increaseKeySequenceNum() {
 		if (MYKeyManager.getManager().getPressedKeyInfo() == null) {
 			return;
@@ -104,6 +148,9 @@ public class KeyButton extends JButton {
 		keySequenceNum++;
 	}
 
+	/**
+	 * decreaseKeySequenceNum ( minus one )
+	 */
 	public synchronized void decreaseKeySequenceNum() {
 		keySequenceNum--;
 		if (keySequenceNum == 0 && keyInfos.size() == 0) {
@@ -111,11 +158,17 @@ public class KeyButton extends JButton {
 		}
 	}
 
+	/**
+	 * set KeyButton size
+	 */
 	public void setOriginalSize(int rowCellNum, int colCellNum) {
 		this.rowCellNum = rowCellNum;
 		this.colCellNum = colCellNum;
 	}
 
+	/**
+	 * set KeyButton location
+	 */
 	public void setOriginalLocation(int startRow, int startCol) {
 		this.startRow = startRow;
 		this.startCol = startCol;
@@ -323,6 +376,9 @@ public class KeyButton extends JButton {
 		this.repaint();
 	}
 
+	/**
+	 * remove KeyButton with copyKeyButton
+	 */
 	public void remove() {
 		Iterator<KeyInfo> it = keyInfos.iterator();
 		while (it.hasNext()) {
@@ -347,6 +403,9 @@ public class KeyButton extends JButton {
 		MYKeyManager.getManager().removeKeyButton(this);
 	}
 
+	/**
+	 * remove KeyButton without copyKeyButton
+	 */
 	public void removeOnly() {
 		Iterator<KeyInfo> it = keyInfos.iterator();
 		while (it.hasNext()) {
@@ -423,21 +482,23 @@ public class KeyButton extends JButton {
 			g2d.drawString(label, xString, yString);
 		} else if (img != null) {
 			// rate = width / height;
-			double imageRate = (double)img.getWidth(this) / (double)img.getHeight(this);
-			double buttonRate = (double)this.getWidth() / (double)this.getHeight();
+			double imageRate = (double) img.getWidth(this)
+					/ (double) img.getHeight(this);
+			double buttonRate = (double) this.getWidth()
+					/ (double) this.getHeight();
 			int height, width, x, y;
-			if(buttonRate > imageRate){
-				height = this.getHeight() - IMAGE_GAP*4;
-				width = (int)(this.getHeight()*imageRate) - IMAGE_GAP*4;
-				x = (this.getWidth() - width)/2;
-				y = IMAGE_GAP*2;
-			}else{
-				width = this.getWidth() - IMAGE_GAP*4;
-				height = (int)(this.getWidth()/imageRate) - IMAGE_GAP*4;
-				x = IMAGE_GAP*2;
-				y = (this.getHeight() - height)/2;
+			if (buttonRate > imageRate) {
+				height = this.getHeight() - IMAGE_GAP * 4;
+				width = (int) (this.getHeight() * imageRate) - IMAGE_GAP * 4;
+				x = (this.getWidth() - width) / 2;
+				y = IMAGE_GAP * 2;
+			} else {
+				width = this.getWidth() - IMAGE_GAP * 4;
+				height = (int) (this.getWidth() / imageRate) - IMAGE_GAP * 4;
+				x = IMAGE_GAP * 2;
+				y = (this.getHeight() - height) / 2;
 			}
-			g.drawImage(img, x,y,width,height, this);
+			g.drawImage(img, x, y, width, height, this);
 		} else if (keyInfos.size() != 0) {
 			g.setColor(Color.white);
 			// g.drawString(label, (this.getWidth() / 2)-label.length(),
@@ -478,7 +539,8 @@ public class KeyButton extends JButton {
 			Font f = new Font("Gothic", Font.BOLD, this.getHeight() / 4);
 			g2d.setFont(f);
 
-			g2d.drawString(Integer.toString(num), x+this.getWidth()/20, y+this.getHeight()/5);
+			g2d.drawString(Integer.toString(num), x + this.getWidth() / 20, y
+					+ this.getHeight() / 5);
 		}
 	}
 
@@ -699,6 +761,14 @@ public class KeyButton extends JButton {
 	}
 }
 
+/**
+ * 
+ * @author Bae Jinshik
+ * 
+ *         SavedKeyInfo help load a work when load the work need to be know
+ *         sequence of keyInfo It contains sequence information
+ * 
+ */
 class SavedKeyInfo {
 	KeyInfo ki;
 	int num;

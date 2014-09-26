@@ -31,9 +31,33 @@ import tool.panel.display.DevicePanel;
 import tool.panel.keysetting.DesktopPane;
 import tool.panel.keysetting.KeySettingMainPanel;
 import tool.panel.phonemesetting.DisplayPhonemePanel;
-import tool.tempUse.SequenceMainPanel;
-import tool.tempUse.SequencePanel;
+import tool.panel.sequences.SequenceMainPanel;
+import tool.panel.sequences.SequencePanel;
 
+
+/* 
+ * Copyright (C) 2008-2009 The Android Open Source Project 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
+ */
+
+
+/**
+ * 
+ * @author Bae Jinshik
+ * MYKeyManager manage all MYKey Information of current work
+ * It help to Save File and load File
+ */
 public class MYKeyManager {
 	public static int KOREAN_PHONEME_MAX_IDX = 3999;
 	public static int KOREAN_PHONEME_MIN_IDX = 3000;
@@ -65,7 +89,8 @@ public class MYKeyManager {
 	private String sdkPath = currentDirectoryPath + File.separator + "libs"
 			+ File.separator + "sdk";
 	private String jrePath = currentDirectoryPath + File.separator + "libs"
-			+ File.separator + "jdk6u26" + File.separator +"jre" + File.separator + "bin";
+			+ File.separator + "jdk6u26" + File.separator + "jre"
+			+ File.separator + "bin";
 
 	private SequenceMainPanel sequenceMainPanel = null;
 	private SequencePanel sequencePanel = null;
@@ -115,7 +140,7 @@ public class MYKeyManager {
 			allShiftKeyButtons.get(0).removeOnly();
 		}
 		sequenceMainPanel.init();
-		if(pressedKeyInfo != null){
+		if (pressedKeyInfo != null) {
 			pressedKeyInfo.cancelClick();
 			setPressedKeyInfo(null);
 		}
@@ -201,7 +226,7 @@ public class MYKeyManager {
 	}
 
 	public void setKeySeqnence(KeySequence ks) {
-		if(keySequence != null){
+		if (keySequence != null) {
 			for (int i = 0; i < keySequence.getKeyButtons().size(); i++) {
 				keySequence.getKeyButtons().get(i).removeSequenceNums();
 			}
@@ -259,6 +284,11 @@ public class MYKeyManager {
 		}
 	}
 
+	/**
+	 * check possibility of make apk File
+	 * It should need all essential Consonant
+	 * @return if Possible true else false
+	 */
 	public boolean checkPossibleToFinishComposing() {
 		for (int i = 0; i < allKeyInfos.size(); i++) {
 			KeyInfo ki = allKeyInfos.get(i);
@@ -267,41 +297,46 @@ public class MYKeyManager {
 				return false;
 			}
 		}
-		for(int i=0;i<allKeySequences.size();i++){
+		for (int i = 0; i < allKeySequences.size(); i++) {
 			KeySequence tempKS = new KeySequence(null);
 			KeySequence ks = allKeySequences.get(i);
 			KeyButton btn = ks.getKeyButtons().get(0);
-			int j=0;
-			for(;j<ks.getKeyButtons().size();j++){
+			int j = 0;
+			for (; j < ks.getKeyButtons().size(); j++) {
 				tempKS.appendKeyButtons(ks.getKeyButtons().get(j));
-				if(ks.getKeyButtons().get(j) == btn){
+				if (ks.getKeyButtons().get(j) == btn) {
 					continue;
-				}else{
+				} else {
 					break;
 				}
 			}
-			if(btn.getKeyInfos().size() < j){ // 키 조합 전 한 버튼을 입력하였을 때의 입력이 없다.
+			if (btn.getKeyInfos().size() < j) { // 키 조합 전 한 버튼을 입력하였을 때의 입력이 없다.
 				ErrorDialog.error("조합된 음소 중에 출력이 불가능한 키가 있습니다.");
 				return false;
 			}
-			for(;j<ks.getKeyButtons().size()-1;j++){
+			for (; j < ks.getKeyButtons().size() - 1; j++) {
 				boolean exist = false;
-				for(int k=0;k<allKeySequences.size();k++){
-					if(tempKS.equals(allKeySequences.get(k))){
+				for (int k = 0; k < allKeySequences.size(); k++) {
+					if (tempKS.equals(allKeySequences.get(k))) {
 						exist = true;
 						break;
 					}
 				}
-				if(!exist){
+				if (!exist) {
 					ErrorDialog.error("조합된 음소 중에 출력이 불가능한 키가 있습니다.");
 					return false;
 				}
-				tempKS.appendKeyButtons(ks.getKeyButtons().get(j+1));
+				tempKS.appendKeyButtons(ks.getKeyButtons().get(j + 1));
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * find KeyButton which has current keycode
+	 * @param keyCode
+	 * @return found KeyButton  if not null
+	 */
 	public KeyButton findKeyButtonFromKeycode(int keyCode) {
 		for (int i = 0; i < allKeyButtons.size(); i++) {
 			if (allKeyButtons.get(i).getKeyCode() == keyCode) {
@@ -316,6 +351,12 @@ public class MYKeyManager {
 		return null;
 	}
 
+	/**
+	 * 
+	 * find KeyButton which has current phoneme
+	 * @param phoneme
+	 * @return found KeyButton  if not null
+	 */
 	public KeyInfo findKeyInfoFromPhoneme(int phoneme) {
 		for (int i = 0; i < allKeyInfos.size(); i++) {
 			if (allKeyInfos.get(i).getphoneme() == phoneme) {
@@ -325,6 +366,12 @@ public class MYKeyManager {
 		return null;
 	}
 
+	/**
+	 * 
+	 * find KeyInfo which has current Label
+	 * @param label
+	 * @return found KeyInfo if not null
+	 */
 	public KeyInfo findKeyInfoFromLabel(String label) {
 		for (int i = 0; i < allKeyInfos.size(); i++) {
 			if (label.equals(allKeyInfos.get(i).getLabel())) {
@@ -334,6 +381,11 @@ public class MYKeyManager {
 		return null;
 	}
 
+	/**
+	 * find all KeyButtons location which has KeyInfo
+	 * @param keyInfo
+	 * @return Vector<KeyLocation>
+	 */
 	public Vector<KeyLocation> findKeyInfoLocation(KeyInfo ki) {
 		Vector<KeyLocation> vec = new Vector<KeyLocation>();
 		KeyButton kb;
@@ -368,17 +420,23 @@ public class MYKeyManager {
 		new TableReader(tablePath, xmlPath, javaPath);
 	}
 
+	/**
+	 * save current work to File
+	 * @param path
+	 * @return saved Path if not null
+	 */
 	public String saveTables(String path) {
 		if (path == null) {
 			return null;
 		}
-		if(!FileHandler.findExtensionName(path).equals("myk")){
-			path+=".myk";
+		if (!FileHandler.findExtensionName(path).equals("myk")) {
+			path += ".myk";
 		}
 		copyAllKeyButtonImageToMYKey();
 		BufferedWriter bw;
 		try {
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+			bw = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(path), "UTF-8"));
 			consonant = 3000;
 			vowel = 3500;
 			stringKeyCode = 4400;
@@ -394,6 +452,12 @@ public class MYKeyManager {
 		return path;
 	}
 
+	/**
+	 * save KeyTable to File
+	 * KeyTable is made of keyButtons
+	 * @param Vector<KeyButton>
+	 * @param BufferedWriter
+	 */
 	private void makeKeyTable(Vector<KeyButton> vec, BufferedWriter bw) {
 		final int FALSE = 0;
 		final int TRUE = 1;
@@ -425,7 +489,7 @@ public class MYKeyManager {
 				switch (btn.getKeyStatus()) {
 				case KeyInfo.SPECIAL_KEY:
 					keyCode = btn.getSpecialPhoneme();
-					if(keyCode == 4400){
+					if (keyCode == 4400) {
 						keyCode = stringKeyCode++;
 					}
 					break;
@@ -467,7 +531,7 @@ public class MYKeyManager {
 						keyIcon = "!no";
 					}
 				}
-				if(keyLabel.equals("!no") && keyIcon.equals("!no")){
+				if (keyLabel.equals("!no") && keyIcon.equals("!no")) {
 					keyLabel = " ";
 				}
 				keyEdgeFlags = 0;
@@ -494,6 +558,13 @@ public class MYKeyManager {
 		}
 	}
 
+	/**
+	 * 
+	 * save PhonemeTable to File
+	 * PhonemeTable is made of keyInfos
+	 * @param Vector<KeyInfo>
+	 * @param BufferedWriter
+	 */
 	private void makePhonemeTable(Vector<KeyInfo> vec, BufferedWriter bw) {
 		try {
 			bw.write("PhonemeTable");
@@ -528,24 +599,28 @@ public class MYKeyManager {
 			}
 			bw.write("StringKey");
 			bw.newLine();
-			
+
 			Vector<KeyLocation> keyLocations = findKeyInfoLocation(findKeyInfoFromLabel("String"));
-			for(int i=0;i<keyLocations.size();i++){
+			for (int i = 0; i < keyLocations.size(); i++) {
 				KeyButton btn = keyLocations.get(i).getKeyButton();
 				int keyCode = btn.getKeyCode();
 				String label = btn.getLabelName();
-				if(label == null){
+				if (label == null) {
 					label = "String";
 				}
 				bw.write(keyCode + "\t" + label);
 				bw.newLine();
 			}
-			
+
 		} catch (Exception e) {
 
 		}
 	}
 
+	/**
+	 * load the saved work
+	 * @param path
+	 */
 	public void loadTables(String path) {
 		try {
 			initComposing();
@@ -588,17 +663,18 @@ public class MYKeyManager {
 				String imagePath = split[6];
 				if (imagePath.equals("!no")) {
 					imagePath = null;
-				}else{
+				} else {
 					imagePath = getImagePathOfMYKey(imagePath);
 				}
-				if(split[8].equals("1")){
+				if (split[8].equals("1")) {
 					isRepeatable = true;
 				}
 				KeyButton btn = panel.loadKeyButton(startRow, startCol,
-						rowCellNum, colCellNum, keyCode, text, imagePath, isRepeatable);
+						rowCellNum, colCellNum, keyCode, text, imagePath,
+						isRepeatable);
 				if (keyCode < KOREAN_PHONEME_MIN_IDX
 						|| keyCode > KOREAN_PHONEME_MAX_IDX) {
-					if(keyCode >= 4400){
+					if (keyCode >= 4400) {
 						keyCode = 4400;
 					}
 					KeyInfo ki = findKeyInfoFromPhoneme(keyCode);
@@ -610,7 +686,7 @@ public class MYKeyManager {
 
 			while ((str = br.readLine()) != null) {
 				String[] split = str.split("\t");
-				if(str.equals("StringKey")){
+				if (str.equals("StringKey")) {
 					break;
 				}
 				if (split.length <= 1) {
@@ -650,7 +726,7 @@ public class MYKeyManager {
 			for (int i = 0; i < allKeyButtons.size(); i++) {
 				allKeyButtons.get(i).updateSavedKeyInfo();
 			}
-			for(int i=0;i<allShiftKeyButtons.size();i++){
+			for (int i = 0; i < allShiftKeyButtons.size(); i++) {
 				allShiftKeyButtons.get(i).updateSavedKeyInfo();
 			}
 		} catch (Exception e) {
@@ -660,11 +736,20 @@ public class MYKeyManager {
 		originalCompositionPanel.repaint();
 	}
 
+	/**
+	 * copy BaseProject to TargetProject
+	 * BaseProject is supplied in MYKey
+	 * @param src
+	 * @param dst
+	 */
 	public void copyBaseProject(String src, String dst) {
 		FileHandler.deleteRecursive(dst);
 		FileHandler.copyDirectory(src, dst);
 	}
 
+	/**
+	 * copy all Image which is not Saved in MYKeyProject
+	 */
 	public void copyAllKeyButtonImageToMYKey() {
 		int num = 0;
 		File imageNum = new File(currentDirectoryPath + File.separator + "res"
@@ -695,8 +780,9 @@ public class MYKeyManager {
 			} else if (!f.getParent().equals(
 					currentDirectoryPath + File.separator + "res"
 							+ File.separator + "img")) {
-				num++;				
-				String fileExtension = FileHandler.findExtensionName(f.getName());
+				num++;
+				String fileExtension = FileHandler.findExtensionName(f
+						.getName());
 				String imageFileName = "key" + num + "." + fileExtension;
 
 				// File copy to MYKey Resource
@@ -728,7 +814,8 @@ public class MYKeyManager {
 					currentDirectoryPath + File.separator + "res"
 							+ File.separator)) {
 				num++;
-				String fileExtension = FileHandler.findExtensionName(f.getName());
+				String fileExtension = FileHandler.findExtensionName(f
+						.getName());
 				String imageFileName = "key" + num + "." + fileExtension;
 
 				// File copy to MYKey Resource
@@ -757,7 +844,11 @@ public class MYKeyManager {
 
 		}
 	}
-	
+
+	/**
+	 * copy All Images to TargetProject
+	 * Imaged should be located in Project-> res/drawable/
+	 */
 	public void copyAllKeyButtonImageToProject() {
 		for (int i = 0; i < allKeyButtons.size(); i++) {
 			KeyButton btn = allKeyButtons.get(i);
@@ -795,18 +886,30 @@ public class MYKeyManager {
 		}
 	}
 
+	/**
+	 * Get ImagePath which will be use in Table
+	 * @param imagePath
+	 * @return
+	 */
 	public String getImagePathOfTable(String imagePath) { // use it when make
 															// ImagePath
 		File f = new File(imagePath);
 		if (f.exists()) {
 			String tableImageName = f.getName();
-			tableImageName = tableImageName.substring(0,tableImageName.lastIndexOf("."));
+			tableImageName = tableImageName.substring(0,
+					tableImageName.lastIndexOf("."));
 			return "@drawable/" + tableImageName;
 		} else {
 			return "!no";
 		}
 	}
 
+	/**
+	 * Get ImagePath which will be use in MYKey
+	 * It read Table and change the path that will be use in MYKey 
+	 * @param imagePath
+	 * @return
+	 */
 	public String getImagePathOfMYKey(String imagePath) {
 		String[] str = imagePath.split("/");
 		if (str.length != 2 || !str[0].equals("@drawable")) {
@@ -822,6 +925,12 @@ public class MYKeyManager {
 		}
 	}
 
+	/**
+	 * Make APK File of Current WorkSpace
+	 * @param apkPath
+	 * @param apkName
+	 * @param install
+	 */
 	public void makeAPKofCurrentWorkingSpace(String apkPath, String apkName,
 			boolean install) {
 		String tempTablePath = currentDirectoryPath + File.separator
@@ -831,12 +940,19 @@ public class MYKeyManager {
 		makeAPKofTable(apkPath, apkName, tempTablePath, install);
 	}
 
+	/***
+	 * Make APK File
+	 * @param apkPath
+	 * @param apkName
+	 * @param tablePath
+	 * @param install
+	 */
 	public void makeAPKofTable(String apkPath, String apkName,
 			String tablePath, boolean install) {
 		if (apkPath == null || tablePath == null) {
 			return;
 		}
-		if(!checkPossibleToFinishComposing()){
+		if (!checkPossibleToFinishComposing()) {
 			return;
 		}
 		copyBaseProject(baseProjectPath, targetProjectPath);
@@ -848,7 +964,9 @@ public class MYKeyManager {
 				String args[] = { jrePath + File.separator + "java", "-jar",
 						builderPath, "-project", targetProjectPath, "-sdk",
 						sdkPath, "-jdk", jdkPath, "-keyname", "testKey",
-						"-keypass", "123456", "-apkname", apkName, "-apkpath", apkPath, "-keytool",jrePath + File.separator + "keytool"};
+						"-keypass", "123456", "-apkname", apkName, "-apkpath",
+						apkPath, "-keytool",
+						jrePath + File.separator + "keytool" };
 				for (int i = 0; i < args.length; i++) {
 					System.out.println("\"" + args[i] + "\",");
 				}
@@ -858,7 +976,8 @@ public class MYKeyManager {
 						builderPath, "-project", targetProjectPath, "-sdk",
 						sdkPath, "-jdk", jdkPath, "-keyname", "testKey",
 						"-keypass", "123456", "-apkname", apkName, "-apkpath",
-						apkPath, "-install" , "-keytool",jrePath + File.separator + "keytool"};
+						apkPath, "-install", "-keytool",
+						jrePath + File.separator + "keytool" };
 				for (int i = 0; i < args.length; i++) {
 					System.out.println("\"" + args[i] + "\",");
 				}

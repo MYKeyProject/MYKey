@@ -14,6 +14,29 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+
+/* 
+ * Copyright (C) 2008-2009 The Android Open Source Project 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
+ */
+
+
+/**
+ * 
+ * @author Kim TaeWan
+ * 
+ */
 public class PhonemeSettingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	final int maxNumOfPhoneme = 5;
@@ -136,23 +159,7 @@ public class PhonemeSettingPanel extends JPanel {
 			downButton[numOfPhoneme - 1].setEnabled(false);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	class PhonemeUpButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -160,7 +167,7 @@ public class PhonemeSettingPanel extends JPanel {
 			int numOfPhoneme = getNumOfPhoneme();
 			JButton upButton[] = getUpButtons();
 			JLabel phoneme[] = getPhonemes();
-			
+
 			int selectedIdx = 0;
 			for (int idx = 0; idx < numOfPhoneme; idx++) {
 				if (clickedBtn == upButton[idx]) {
@@ -177,7 +184,7 @@ public class PhonemeSettingPanel extends JPanel {
 			}
 		}
 	}
-	
+
 	class PhonemeDownButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -202,8 +209,7 @@ public class PhonemeSettingPanel extends JPanel {
 			}
 		}
 	}
-	
-	
+
 	class PhonemeDeleteButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -241,12 +247,5 @@ public class PhonemeSettingPanel extends JPanel {
 			decreaseNumOfPhoneme();
 		}
 	}
-
-	
-	
-	
-	
-	
-	
 
 }

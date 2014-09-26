@@ -24,5 +24,9 @@ public class Main {
 		
 		// call TableReader Constructor.
 		new TableReader(tablePath, xmlPath, javaPath);
+		
+		/*
+		 * generator should be combined with UI Tool
+		 */
 	}
 }

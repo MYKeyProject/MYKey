@@ -293,7 +293,7 @@ public class MYKeyManager {
 		for (int i = 0; i < allKeyInfos.size(); i++) {
 			KeyInfo ki = allKeyInfos.get(i);
 			if ((ki.isPrimary()) && (ki.getNum() <= 0)) {
-				ErrorDialog.error("Special, ìžìŒ, ëª¨ìŒí‚¤ëŠ” ëª¨ë“  í‚¤ê°€ ì¡´ìž¬í•´ì•¼ í•©ë‹ˆë‹¤.");
+				ErrorDialog.error("Special, ÀÚÀ½, ¸ðÀ½Å°´Â ¸ðµç Å°°¡ Á¸ÀçÇØ¾ß ÇÕ´Ï´Ù.");
 				return false;
 			}
 		}
@@ -310,8 +310,8 @@ public class MYKeyManager {
 					break;
 				}
 			}
-			if (btn.getKeyInfos().size() < j) { // í‚¤ ì¡°í•© ì „ í•œ ë²„íŠ¼ì„ ìž…ë ¥í•˜ì˜€ì„ ë•Œì˜ ìž…ë ¥ì´ ì—†ë‹¤.
-				ErrorDialog.error("ì¡°í•©ëœ ìŒì†Œ ì¤‘ì— ì¶œë ¥ì´ ë¶ˆê°€ëŠ¥í•œ í‚¤ê°€ ìžˆìŠµë‹ˆë‹¤.");
+			if (btn.getKeyInfos().size() < j) { // Å° Á¶ÇÕ Àü ÇÑ ¹öÆ°À» ÀÔ·ÂÇÏ¿´À» ¶§ÀÇ ÀÔ·ÂÀÌ ¾ø´Ù.
+				ErrorDialog.error("Á¶ÇÕµÈ À½¼Ò Áß¿¡ Ãâ·ÂÀÌ ºÒ°¡´ÉÇÑ Å°°¡ ÀÖ½À´Ï´Ù.");
 				return false;
 			}
 			for (; j < ks.getKeyButtons().size() - 1; j++) {
@@ -323,7 +323,7 @@ public class MYKeyManager {
 					}
 				}
 				if (!exist) {
-					ErrorDialog.error("ì¡°í•©ëœ ìŒì†Œ ì¤‘ì— ì¶œë ¥ì´ ë¶ˆê°€ëŠ¥í•œ í‚¤ê°€ ìžˆìŠµë‹ˆë‹¤.");
+					ErrorDialog.error("Á¶ÇÕµÈ À½¼Ò Áß¿¡ Ãâ·ÂÀÌ ºÒ°¡´ÉÇÑ Å°°¡ ÀÖ½À´Ï´Ù.");
 					return false;
 				}
 				tempKS.appendKeyButtons(ks.getKeyButtons().get(j + 1));
@@ -535,10 +535,10 @@ public class MYKeyManager {
 					keyLabel = " ";
 				}
 				keyEdgeFlags = 0;
-				if (prevYPos != yPos) {
+				if (prevYPos != yPos && prevYPos == 0) {
 					keyEdgeFlags = LEFT_EDGE_FLAG;
-				} else if ((i == (vec.size() - 1))
-						|| (vec.get(i + 1).getStartRow() != btn.getStartRow())) {
+				} else if (((i == (vec.size() - 1))
+						|| (vec.get(i + 1).getStartRow() != btn.getStartRow())) && (xPos + keyWidth) == CompositionPanel.getColumn()) {
 					keyEdgeFlags = RIGHT_EDGE_FLAG;
 				}
 				prevYPos = yPos;

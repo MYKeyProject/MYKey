@@ -302,23 +302,16 @@ public class SoftKeyboard extends InputMethodService implements
 	}
 
 	private void setVibrate() {
-		if (mVibrateOn)
+		if(mVibrateOn){
 			mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-		if(mVibrator != null)
 			mVibrator.vibrate(40);
+		}
 	}
 
 	private void setSound() {
-		if (mAudioManager != null)
-			mSilentMode = (mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL);
-		else
+		if(mSoundOn){
 			mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-		if (mSoundOn && !mSilentMode) {
-			int sound = AudioManager.FX_KEYPRESS_STANDARD;
-			if(mAudioManager != null)
-				mAudioManager.playSoundEffect(sound, 1.0f);
+			mAudioManager.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, 1.0f);
 		}
 	}
 

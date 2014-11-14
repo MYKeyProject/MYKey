@@ -5,7 +5,7 @@ MaxCol
 VerticalRate
 40
 LayoutTable
-3000	3	3	0	0	ㄱㅋ	!no	2	0
+3000	3	3	0	0	ㄱㅋ	!no	0	0
 3001	3	3	3	0	ㄴㄷ	!no	0	0
 3002	3	3	6	0	ㄹㅁ	!no	0	0
 3500	3	3	9	0	ㅏ	!no	0	0
@@ -15,14 +15,14 @@ LayoutTable
 3004	3	3	3	3	ㅅㅌ	!no	0	0
 4400	6	3	6	3	Hansung	!no	0	0
 4401	6	3	12	3	MyKey	!no	3	0
--1	3	6	0	6	Shift	!no	2	0
+-1	3	6	0	6	Shift	!no	0	0
 3005	3	3	3	6	ㅇㅎ	!no	0	0
 3006	3	3	6	6	ㅈㅊ	!no	0	0
 3503	3	3	9	6	ㅗ	!no	0	0
 3504	3	3	12	6	ㅜ	!no	0	0
 3505	3	3	15	6	ㅡ	!no	3	0
--7	3	3	3	9	ENG	!no	2	0
-32	6	3	6	9	Space	!no	0	1
+-7	3	3	3	9	ENG	!no	0	0
+32	6	3	6	9	Space	!no	0	0
 -5	3	3	12	9	Delete	!no	0	1
 10	3	3	15	9	Enter	!no	3	0
 MaxRow
@@ -32,7 +32,7 @@ MaxCol
 VerticalRate
 40
 LayoutTable
-3007	3	3	0	0	ㄲ	!no	2	0
+3007	3	3	0	0	ㄲ	!no	0	0
 3008	3	3	3	0	ㄸ	!no	0	0
 3009	3	3	6	0	ㄹㅁ	!no	0	0
 3506	3	3	9	0	ㅑ	!no	0	0
@@ -42,14 +42,14 @@ LayoutTable
 3011	3	3	3	3	ㅆ	!no	0	0
 4402	6	3	6	3	★	!no	0	0
 4403	6	3	12	3	♥	!no	3	0
--1	3	6	0	6	Shift	!no	2	0
+-1	3	6	0	6	Shift	!no	0	0
 3012	3	3	3	6	ㅇㅎ	!no	0	0
 3013	3	3	6	6	ㅉ	!no	0	0
 3509	3	3	9	6	ㅛ	!no	0	0
 3510	3	3	12	6	ㅠ	!no	0	0
 3511	3	3	15	6	ㅡ	!no	3	0
--7	3	3	3	9	ENG	!no	2	0
-32	6	3	6	9	Space	!no	0	1
+-7	3	3	3	9	ENG	!no	0	0
+-4	6	3	6	9	 	!no	0	0
 -5	3	3	12	9	Delete	!no	0	1
 10	3	3	15	9	Enter	!no	3	0
 PhonemeTable

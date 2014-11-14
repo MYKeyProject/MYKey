@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -31,11 +32,11 @@ import tool.manager.MYKeyManager;
  * limitations under the License. 
  */
 
-
 /**
  * Panel of Keyboard will be show
+ * 
  * @author Bae Jinshik
- *
+ * 
  */
 public class CompositionPanel extends JPanel implements MouseListener,
 		MouseMotionListener {
@@ -98,10 +99,18 @@ public class CompositionPanel extends JPanel implements MouseListener,
 		Vector vec = MYKeyManager.getManager().getOriginalKeyButtons();
 		if (vec.size() == 0) {
 			return true;
-		} else if (row <= CompositionPanel.row || col <= CompositionPanel.col) {
-			ErrorDialog.error("버튼이 있는 상태에서 행/열 조절은 확대밖에 지원하지 않습니다.");
-			return false;
 		} else {
+			Iterator<KeyButton> it = vec.iterator();
+			while (it.hasNext()) {
+				KeyButton btn = it.next();
+				if (btn.getStartRow() + btn.getRowCellNum() > row) {
+					ErrorDialog.error("현재 있는 버튼이 지정한 행의 범위를 초과합니다.");
+					return false;
+				} else if (btn.getStartCol() + btn.getColCellNum() > col) {
+					ErrorDialog.error("현재 있는 버튼이 지정한 열의 범위를 초과합니다.");
+					return false;
+				}
+			}
 			return true;
 		}
 	}
@@ -135,7 +144,8 @@ public class CompositionPanel extends JPanel implements MouseListener,
 	}
 
 	public KeyButton loadKeyButton(int startRow, int startCol, int rowCellNum,
-			int colCellNum, int keyCode, String text, String imagePath, boolean isRepeatable) {
+			int colCellNum, int keyCode, String text, String imagePath,
+			boolean isRepeatable) {
 		KeyButton kb = new KeyButton(startRow, startCol, rowCellNum,
 				colCellNum, this, true);
 		kb.setKeyCode(keyCode);
